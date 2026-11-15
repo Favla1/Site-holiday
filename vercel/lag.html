@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customiza&ccedil;&atilde;o - HOLIDAY Guild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-premium.css?v=20260315-5">
+</head>
+<body>
+    <div class="animated-background">
+        <div class="smoke-particle smoke-particle-1"></div>
+        <div class="smoke-particle smoke-particle-2"></div>
+        <div class="smoke-particle smoke-particle-3"></div>
+        <div class="smoke-particle smoke-particle-4"></div>
+        <div class="smoke-particle smoke-particle-5"></div>
+
+        <div class="light-flicker light-1"></div>
+        <div class="light-flicker light-2"></div>
+        <div class="light-flicker light-3"></div>
+
+        <div class="cloud cloud-bg-1"></div>
+        <div class="cloud cloud-bg-2"></div>
+        <div class="cloud cloud-bg-3"></div>
+        <div class="star star-bg-1"></div>
+        <div class="star star-bg-2"></div>
+        <div class="star star-bg-3"></div>
+        <div class="star star-bg-4"></div>
+        <div class="star star-bg-5"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>GUILD HOLIDAY</h1>
+                <h2 style="color: white; font-size: 28px; margin: 10px 0 5px 0; font-weight: 600; animation: fadeInUp 1s ease-out 0.2s both;">Customiza&ccedil;&atilde;o & Otimiza&ccedil;&atilde;o</h2>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">In&iacute;cio</a>
+                <a href="dicas.html" class="nav-link">Comandos & Dicas</a>
+                <a href="lag.html" class="nav-link active">Customiza&ccedil;&atilde;o</a>
+                <a href="downloads.html" class="nav-link">Downloads</a>
+                <a href="members.html" class="nav-link" style="display: none;">Membros</a>
+                <a href="profile.html" class="nav-link" style="display: none;">Perfil</a>
+            </div>
+            <div class="navbar-buttons">
+                <a href="https://chat.whatsapp.com/EDqaY8udJmFCTVCTex3b5p" class="btn-navbar btn-whatsapp icon-btn tooltip-theme" target="_blank" aria-label="WhatsApp" data-tooltip="WhatsApp">
+                    <img src="/imagens/wp.png" alt="WhatsApp" class="navbar-icon" width="16" height="16">
+                </a>
+                <a href="https://discord.gg/KEc4ZdR3" class="btn-navbar btn-discord icon-btn tooltip-theme" target="_blank" aria-label="Discord" data-tooltip="Discord">
+                    <img src="/imagens/Discord.png" alt="Discord" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="notificationBell" class="btn-navbar btn-notifications icon-btn tooltip-theme" style="position: relative; display: none;" aria-label="Notifica&ccedil;&otilde;es" data-tooltip="Notifica&ccedil;&otilde;es">
+                    <img src="/imagens/Sino.png" alt="Notifica&ccedil;&otilde;es" class="navbar-icon" width="16" height="16">
+                    <span id="notificationBadge" class="notification-badge" style="display: none;"></span>
+                </button>
+                <a href="login.html" class="btn-navbar btn-login icon-btn tooltip-theme" aria-label="Login" data-tooltip="Login">
+                    <img src="/imagens/login.png" alt="Login" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="profileCardBtn" class="btn-navbar icon-btn tooltip-theme" style="display: none; position: relative;" aria-label="Perfil" data-tooltip="Perfil">
+                    <img id="profileCardAvatar" src="/imagens/logo.png" alt="Perfil" class="navbar-icon" width="20" height="20" style="border-radius: 50%; border: 2px solid #EC4899;">
+                </button>
+                <button id="logoutBtn" class="btn-navbar btn-logout icon-btn tooltip-theme" style="display: none;" aria-label="Sair" data-tooltip="Sair">
+                    <img src="/imagens/Sair.png" alt="Sair" class="navbar-icon" width="16" height="16">
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="content-section">
+            <h3 class="config-title" style="text-align: center; margin-bottom: 18px;">TIRAR O LAG DO JOGO?</h3>
+
+            <p style="text-align: center; color: white; animation: fadeInUp 1s ease-out 0.4s both; margin-bottom: 26px;">
+                Que o jogo &eacute; mal otimizado, todos n&oacute;s sabemos. Para diminuir o travamento e o lag, iremos desabilitar algumas fun&ccedil;&otilde;es.
+                Lembre-se que um dos motivos do travamento ? a polui&ccedil;&atilde;o de movimentos da tela, ent&atilde;o desative o m&aacute;ximo de anima&ccedil;&otilde;es do jogo.
+            </p>
+
+            <div class="config-section">
+                <div class="config-items">
+                    <div class="config-item">
+                        <div class="config-feature">Static Player Art</div>
+                        <div class="config-feature-description">
+                            Nada mais &eacute; que a anima&ccedil;&atilde;o de outros players da sala. Desativando, voc&ecirc; ter&aacute; mais fluidez no jogo.
+                            (Lembrando que tem como colocar um atalho no keyboard.)
+                        </div>
+                        <div class="config-status">(ON para ativar / OFF para desativar)</div>
+                    </div>
+
+                    <div class="config-item">
+                        <div class="config-feature">Visuals</div>
+                        <div class="config-feature-description">
+                            Não podemos nos esquecer do Visuals, que facilmente e a forma mais limpa de obter fluidez no jogo.
+                            (Quanto menor a qualidade, mais desempenho ter&aacute;).
+                        </div>
+                        <div class="config-status">(AUTO "Performance" / HIGH "Equilibrado" / LOW "Desempenho")</div>
+                    </div>
+
+                    <div class="config-item">
+                        <div class="config-feature">Options - Animations</div>
+                        <div class="config-feature-description">
+                            Em Options, tem o mais importante que muita gente não sabe: desative Animations para desativar os efeitos das classes e dos mapas.
+                            Isso deixar&aacute; o jogo com m&aacute;ximo de fluidez.
+                        </div>
+                        <div class="config-status">(ON para ativar / OFF para desativar)</div>
+                    </div>
+
+                    <div class="config-item">
+                        <div class="config-feature">Damage (pesquisa)</div>
+                        <div class="config-feature-description">
+                            Pesquisando Damage na barra de pesquisas, haver&aacute; duas opções de vantagem para voc&ecirc; que tem PC/Celular fraco.
+                            Essas opções desabilitam o visual do dano, e isso te dar&aacute; mais desempenho.
+                            Quanto menos coisa na tela, menos polui&ccedil;&atilde;o e mais limpo o jogo ficar&aacute;.
+                        </div>
+                        <div class="config-status">(ON para ativar / OFF para desativar)</div>
+                    </div>
+
+                    <div class="config-item">
+                        <div class="config-feature">Hide Players</div>
+                        <div class="config-feature-description">
+                            Esconde os outros players da sala, deixando a tela mais limpa e com melhor desempenho.
+                        </div>
+                        <div class="config-status">(ON para ativar / OFF para desativar)</div>
+                    </div>
+
+                    <div class="config-item">
+                        <div class="config-feature">Freeze / Lock Monster Position</div>
+                        <div class="config-feature-description">
+                            Deixar&aacute; o monstro parado no lugar. Aten&ccedil;&atilde;o: se voc&ecirc; estiver usando uma classe física, ter&aacute; que chegar perto para atacar.
+                        </div>
+                        <div class="config-status">(ON para ativar / OFF para desativar)</div>
+                    </div>
+
+                    <div class="config-item">
+                        <div class="config-feature">Animations com "Disable"</div>
+                        <div class="config-feature-description">
+                            Tudo que estiver escrito Disable nas Animations pode ativar, pois isso ajudar&aacute; no desempenho também.
+                        </div>
+                        <div class="config-status">(ON para ativar / OFF para desativar)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 HOLIDAY Guild. Todos os direitos reservados.</p>
+            <p>Grupo Guild Holiday criado em 2014</p>
+        </div>
+    </footer>
+
+    <script src="site-config.js"></script>
+    <script src="auth-api.js"></script>
+    <script src="auth-manager.js"></script>
+    <script src="navigation.js?v=20261114-navbar-icons-1"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
