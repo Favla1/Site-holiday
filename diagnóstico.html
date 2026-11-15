@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnóstico da Página de Downloads</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a2e; color: white; }
+        .test { margin: 20px 0; padding: 15px; background: #16213e; border-left: 4px solid #EC4899; }
+        .pass { border-left-color: #22C55E; }
+        .fail { border-left-color: #EF4444; }
+        pre { background: #0a0e27; padding: 10px; overflow-x: auto; border-radius: 5px; }
+        button { padding: 10px 20px; background: #6B46C1; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #8B5CF6; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnóstico: Página de Downloads</h1>
+    
+    <button onclick="runAllTests()">Executar Testes</button>
+    <button onclick="loadDownloadsSimulation()">Simular Carregamento de Downloads</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function log(title, status, details = '') {
+            const statusClass = status === 'PASS' ? 'pass' : 'fail';
+            const statusColor = status === 'PASS' ?  '✓' : '✗';
+            resultsDiv.innerHTML += `
+                <div class="test ${statusClass}">
+                    <h3>${statusColor} ${title}</h3>
+                    ${details ? `<pre>${details}</pre>` : ''}
+                </div>
+            `;
+        }
+
+        async function runAllTests() {
+            resultsDiv.innerHTML = '';
+            
+            // Test 1: API Connectivity
+            try {
+                const response = await fetch('http://localhost:5000/api/downloads/list/with-ranks');
+                const data = await response.json();
+                if (response.status === 200 && data.success && data.downloads) {
+                    log('API Conecta Corretamente', 'PASS', `Status: ${response.status}\nDownloads: ${data.downloads.length}`);
+                } else {
+                    log('API Responde Mas Dados Inválidos', 'FAIL', JSON.stringify(data, null, 2));
+                }
+            } catch (e) {
+                log('Erro ao Conectar API', 'FAIL', e.message);
+            }
+
+            // Test 2: Check DOM Elements
+            const container = document.querySelector('[id="downloads"]');
+            if (container) {
+                log('Container #downloads Existe', 'PASS', `Classe: ${container.className}`);
+            } else {
+                log('Container #downloads NÃO Existe', 'FAIL');
+            }
+
+            const spinner = document.querySelector('[id="loadingSpinner"]');
+            if (spinner) {
+                log('Loading Spinner Existe', 'PASS', `Display: ${spinner.style.display || 'visível por padrão'}`);
+            } else {
+                log('Loading Spinner NÃO Existe', 'FAIL');
+            }
+
+            const notFound = document.querySelector('[id="notFound"]');
+            if (notFound) {
+                log('Not Found Div Existe', 'PASS', `Display: ${notFound.style.display}`);
+            } else {
+                log('Not Found Div NÃO Existe', 'FAIL');
+            }
+
+            // Test 3: Check if scripts are loaded
+            if (typeof AuthAPI !== 'undefined') {
+                log('AuthAPI Está Disponível', 'PASS',  'Classe AuthAPI carregada');
+            } else {
+                log('AuthAPI NÃO Está Disponível', 'FAIL', 'auth-api.js não foi carregado?');
+            }
+
+            // Test 4: Check for render functions
+            if (typeof renderDownloads === 'function') {
+                log('renderDownloads() Função Existe', 'PASS');
+            } else {
+                log('renderDownloads() Função NÃO Existe', 'FAIL');
+            }
+
+            if (typeof filterAndRender === 'function') {
+                log('filterAndRender() Função Existe', 'PASS');
+            } else {
+                log('filterAndRender() Função NÃO Existe', 'FAIL');
+            }
+        }
+
+        async function loadDownloadsSimulation() {
+            resultsDiv.innerHTML = '';
+            log('Simulando Carregamento...', 'PASS');
+            
+            try {
+                if (typeof AuthAPI === 'undefined') {
+                    log('Erro: AuthAPI não disponível', 'FAIL');
+                    return;
+                }
+
+                const response = await AuthAPI.getDownloadsWithRanks();
+                log('AuthAPI.getDownloadsWithRanks() Resposta', 'PASS', JSON.stringify(response, null, 2).substring(0, 500) + '...');
+
+                if (response.success && response.downloads) {
+                    log('Downloads Recebidos', 'PASS', `Total: ${response.downloads.length}`);
+                    
+                    // Try to render
+                    if (typeof renderDownloads === 'function') {
+                        renderDownloads(response.downloads);
+                        log('renderDownloads() Executado', 'PASS', `${response.downloads.length} downloads deveriam estar visíveis`);
+                    } else {
+                        log('renderDownloads() não é função', 'FAIL');
+                    }
+                } else {
+                    log('Resposta Inválida', 'FAIL', JSON.stringify(response));
+                }
+            } catch (e) {
+                log('Erro Durante Simulação', 'FAIL', e.message + '\n' + e.stack);
+            }
+        }
+    </script>
+</body>
+</html>

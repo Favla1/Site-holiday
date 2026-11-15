@@ -1,0 +1,2793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - HOLIDAY Guild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-premium.css?v=20260315-5">
+    <style>
+        body {
+            min-height: 100vh;
+            color: #E2E8F0;
+            background: #0a0015;
+        }
+
+        .admin-container {
+            width: clamp(320px, calc(100vw - 28px), 1760px);
+            max-width: 1760px;
+            margin: 0 auto;
+            padding: 20px 10px 28px;
+            box-sizing: border-box;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #6B46C1 0%, #EC4899 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .admin-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .admin-section {
+            background: rgba(107, 70, 193, 0.1);
+            border: 1px solid #6B46C1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow: visible !important;
+        }
+
+        .admin-section h2 {
+            color: #EC4899;
+            margin-top: 0;
+            border-bottom: 2px solid #6B46C1;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #EC4899;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Select com tema do site (inclui dropdown escuro quando suportado) */
+        .admin-container select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            color-scheme: dark;
+            background:
+                linear-gradient(135deg, rgba(26, 26, 46, 0.92), rgba(22, 33, 62, 0.85));
+            border: 1px solid rgba(236, 72, 153, 0.75);
+            color: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 0 0 1px rgba(107, 70, 193, 0.25) inset, 0 10px 24px rgba(0, 0, 0, 0.25);
+            padding-right: 38px;
+            background-image:
+                linear-gradient(135deg, rgba(26, 26, 46, 0.92), rgba(22, 33, 62, 0.85)),
+                radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.22), transparent 52%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%23FBCFE8' d='M7 10l5 5l5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 0 0, 0 0, right 12px center;
+            background-size: cover, cover, 18px 18px;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+        }
+
+        .admin-container select:hover {
+            filter: brightness(1.04);
+            border-color: rgba(244, 114, 182, 0.95);
+            box-shadow: 0 0 18px rgba(236, 72, 153, 0.22), 0 0 0 1px rgba(107, 70, 193, 0.3) inset;
+        }
+
+        .admin-container select:focus,
+        .admin-container select:focus-visible {
+            outline: none;
+            border-color: rgba(244, 114, 182, 0.95);
+            box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.45), 0 0 0 4px rgba(236, 72, 153, 0.28);
+        }
+
+        .admin-container select option,
+        .admin-container select optgroup {
+            background-color: #1A123D;
+            color: #F8FAFC;
+        }
+
+        .admin-container input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+            border: 1px solid rgba(236, 72, 153, 0.62);
+            background-color: rgba(23, 20, 54, 0.96);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 6px 16px rgba(8, 15, 30, 0.18);
+            cursor: pointer;
+            display: inline-grid;
+            place-items: center;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+            flex-shrink: 0;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 10px 10px;
+            background-image: none;
+        }
+
+        .admin-container input[type="checkbox"]:hover {
+            border-color: rgba(244, 114, 182, 0.92);
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.1), 0 8px 18px rgba(8, 15, 30, 0.22);
+        }
+
+        .admin-container input[type="checkbox"]:checked {
+            border-color: rgba(244, 114, 182, 0.98);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M6.4 11.2L2.9 7.7l1.4-1.4l2.1 2.1l5.3-5.3l1.4 1.4z'/%3E%3C/svg%3E"), linear-gradient(135deg, rgba(124, 58, 237, 0.98), rgba(236, 72, 153, 0.98));
+            background-size: 10px 10px, cover;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.14), 0 8px 18px rgba(124, 58, 237, 0.22);
+        }
+
+        .admin-container input[type="checkbox"]:focus,
+        .admin-container input[type="checkbox"]:focus-visible {
+            outline: none;
+            border-color: rgba(244, 114, 182, 0.98);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.18), 0 8px 18px rgba(8, 15, 30, 0.22);
+        }
+
+        .admin-container input[type="checkbox"]:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            filter: grayscale(0.12);
+        }
+
+        /* Remover ::after do CSS geral para checkboxes com containers específicos */
+        #adminPanelCheckboxContainer input[type="checkbox"]::after,
+        #visibilityCheckboxContainer input[type="checkbox"]::after,
+        #downloadManagementCheckboxContainer input[type="checkbox"]::after,
+        #orderAllRanksCheckboxContainer input[type="checkbox"]::after,
+        #animatedProfileCheckboxContainer input[type="checkbox"]::after,
+        #rankCanChangeOwnColorContainer input[type="checkbox"]::after {
+            display: none;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #EC4899 0%, #6B46C1 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .form-group button:hover {
+            transform: scale(1.05);
+        }
+
+        .account-search-button {
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 7px;
+            background: linear-gradient(135deg, #EC4899 0%, #6B46C1 100%);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.28);
+        }
+
+        .account-search-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.32);
+        }
+
+        .account-search-button:focus-visible {
+            outline: 2px solid #F9A8D4;
+            outline-offset: 3px;
+        }
+
+        .color-input {
+            width: 60px;
+            height: 40px;
+            padding: 2px;
+            cursor: pointer;
+        }
+
+        .ranks-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .rank-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rank-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .rank-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rank-info h3 {
+            margin: 0 0 5px 0;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .rank-info p {
+            margin: 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .rank-description {
+            margin: 3px 0 0 0 !important;
+            font-size: 12px !important;
+            color: rgba(255, 255, 255, 0.7) !important;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-custom-text {
+            margin: 2px 0 0 0 !important;
+            font-size: 11px !important;
+            color: rgba(236, 72, 153, 0.8) !important;
+            font-style: italic;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-actions {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .rank-actions button {
+            padding: 5px 10px;
+            font-size: 11px;
+            background: #EC4899;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .rank-actions button:hover {
+            background: #6B46C1;
+        }
+
+        .rank-actions button.delete {
+            background: #FF0000;
+        }
+
+        .rank-actions button.delete:hover {
+            background: #CC0000;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .users-table thead {
+            background: linear-gradient(135deg, #6B46C1 0%, #EC4899 100%);
+        }
+
+        .users-table th {
+            padding: 15px;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+        }
+
+        .users-table td {
+            padding: 15px;
+            color: #E0E7FF;
+            border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .users-table tr:hover {
+            background: rgba(236, 72, 153, 0.1);
+        }
+
+        .user-ranks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .user-rank-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            background: rgba(236, 72, 153, 0.3);
+            border: 1px solid rgba(236, 72, 153, 0.5);
+        }
+
+        .users-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 8px;
+            overflow-y: visible;
+        }
+
+        #users-tab .users-table th:last-child,
+        #users-tab .users-table td:last-child {
+            min-width: 290px;
+            vertical-align: top;
+        }
+
+        #users-tab .users-table th:nth-child(1),
+        #users-tab .users-table td:nth-child(1) {
+            width: 12%;
+        }
+
+        #users-tab .users-table th:nth-child(2),
+        #users-tab .users-table td:nth-child(2) {
+            width: 11%;
+        }
+
+        #users-tab .users-table td:nth-child(3) {
+            width: 24%;
+            min-width: 320px;
+            overflow: visible !important;
+        }
+
+        #users-tab .users-table td {
+            overflow: visible !important;
+        }
+
+        #users-tab .users-table {
+            overflow: visible !important;
+        }
+
+        #users-tab .users-table th:nth-child(4),
+        #users-tab .users-table td:nth-child(4) {
+            width: 20%;
+        }
+
+        #users-tab .users-table th:nth-child(5),
+        #users-tab .users-table td:nth-child(5) {
+            width: 10%;
+        }
+
+        .email-reveal-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .email-reveal-wrap span {
+            display: block;
+            max-width: 100%;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.02em;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .user-actions-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+            min-width: 265px;
+        }
+
+        .users-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .users-toolbar-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .users-toolbar-copy strong {
+            color: #F8FAFC;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .users-toolbar-copy span {
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .users-search-field {
+            flex: 1 1 340px;
+            max-width: 420px;
+        }
+
+        .users-search-field input {
+            width: 100%;
+            min-height: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(236, 72, 153, 0.45);
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(49, 16, 95, 0.78));
+            color: #F8FAFC;
+            padding: 0 14px;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.2);
+        }
+
+        .users-search-field input::placeholder {
+            color: rgba(226, 232, 240, 0.55);
+        }
+
+        .users-search-field input:focus-visible {
+            border-color: rgba(244, 114, 182, 0.95);
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2), 0 12px 30px rgba(15, 23, 42, 0.25);
+        }
+
+        .users-search-empty {
+            margin: 16px 0 0;
+            color: rgba(226, 232, 240, 0.82);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ban-days-input {
+            appearance: textfield;
+            -moz-appearance: textfield;
+            width: 100%;
+        }
+
+        .ban-days-input::-webkit-outer-spin-button,
+        .ban-days-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+
+        .user-inline-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .user-inline-actions .remove-avatar-btn,
+        .user-inline-actions .remove-animated-background-btn,
+        .user-inline-actions .send-ticket-btn,
+        .user-inline-actions .delete-account-btn {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+
+        .rank-select {
+            display: grid;
+            grid-template-columns: minmax(145px, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+            overflow: visible !important;
+        }
+
+        .rank-select-themed {
+            position: relative;
+            min-width: 0;
+            overflow: visible !important;
+        }
+
+        .rank-select-themed::after {
+            content: '▾';
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(248, 250, 252, 0.9);
+            font-size: 11px;
+            pointer-events: none;
+        }
+
+        .rank-select-themed.is-open::after {
+            content: '▴';
+        }
+
+        .rank-select-themed-trigger {
+            width: 100%;
+            padding: 8px 10px;
+            min-height: 36px;
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.88), rgba(39, 13, 82, 0.78));
+            border: 1px solid rgba(236, 72, 153, 0.55);
+            border-radius: 8px;
+            color: #F8FAFC;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            outline: none;
+            cursor: pointer;
+            padding-right: 30px;
+        }
+
+        .rank-select-themed-trigger:focus-visible {
+            border-color: rgba(244, 114, 182, 0.95);
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.28);
+        }
+
+        .rank-select-themed-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: auto;
+            z-index: 10000 !important;
+            border: 1px solid rgba(236, 72, 153, 0.48);
+            border-radius: 10px;
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.97), rgba(30, 27, 75, 0.97));
+            box-shadow: 0 18px 36px rgba(2, 6, 23, 0.58);
+            padding: 6px;
+            overflow: hidden;
+            min-width: 250px;
+        }
+
+        .rank-select-themed-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 2px;
+            overflow-x: hidden;
+        }
+
+        .rank-select-themed-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .rank-select-themed-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(236, 72, 153, 0.85), rgba(147, 51, 234, 0.85));
+            border-radius: 999px;
+        }
+
+        .rank-select-themed-search-wrap {
+            padding: 2px 2px 8px 2px;
+        }
+
+        .rank-select-themed-search {
+            width: 100%;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid rgba(236, 72, 153, 0.48);
+            background: rgba(15, 23, 42, 0.84);
+            color: #F8FAFC;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .rank-select-themed-search::placeholder {
+            color: rgba(226, 232, 240, 0.62);
+        }
+
+        .rank-select-themed-search:focus-visible {
+            border-color: rgba(244, 114, 182, 0.95);
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.24);
+        }
+
+        .rank-select-themed-option {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #F1F5F9;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .rank-select-themed-option:hover {
+            background: rgba(236, 72, 153, 0.2);
+        }
+
+        .rank-select-themed-option.is-selected {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.36), rgba(124, 58, 237, 0.42));
+            color: #fff;
+        }
+
+        .rank-select-themed-option-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .rank-select-themed-option-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-select-themed-option-group {
+            padding: 2px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(196, 181, 253, 0.55);
+            background: rgba(30, 27, 75, 0.65);
+            color: #DDD6FE;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .rank-select-themed-option-desc {
+            color: rgba(226, 232, 240, 0.74);
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .rank-select-themed-empty {
+            padding: 8px 10px;
+            font-size: 12px;
+            color: rgba(226, 232, 240, 0.75);
+        }
+
+        .rank-select-native {
+            display: none;
+        }
+
+        .toggle-email-btn,
+        .add-rank-btn,
+        .delete-account-btn,
+        .remove-avatar-btn,
+        .remove-animated-background-btn,
+        .send-ticket-btn,
+        .admin-broadcast-ticket-btn {
+            min-height: 34px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+            white-space: nowrap;
+        }
+
+        .toggle-email-btn {
+            width: 92px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-color: rgba(236, 72, 153, 0.6);
+            background: linear-gradient(135deg, rgba(12, 18, 41, 0.95), rgba(56, 27, 114, 0.92));
+            box-shadow: 0 6px 16px rgba(16, 24, 40, 0.35);
+        }
+
+        #post-permissions-tab .users-table th:nth-child(2),
+        #post-permissions-tab .users-table td:nth-child(2) {
+            min-width: 320px;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .add-rank-btn {
+            border-color: rgba(236, 72, 153, 0.75);
+            background: linear-gradient(135deg, #EC4899, #A855F7);
+            box-shadow: 0 8px 18px rgba(168, 85, 247, 0.3);
+        }
+
+        .delete-account-btn {
+            align-self: flex-start;
+            border-color: rgba(248, 113, 113, 0.72);
+            background: linear-gradient(135deg, #EF4444, #B91C1C);
+            box-shadow: 0 8px 18px rgba(239, 68, 68, 0.25);
+        }
+
+        .remove-avatar-btn {
+            align-self: flex-start;
+            border-color: rgba(245, 158, 11, 0.72);
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.22);
+        }
+
+        .remove-animated-background-btn {
+            align-self: flex-start;
+            border-color: rgba(251, 146, 60, 0.72);
+            background: linear-gradient(135deg, #F97316, #EA580C);
+            box-shadow: 0 8px 18px rgba(249, 115, 22, 0.24);
+        }
+
+        .send-ticket-btn {
+            align-self: flex-start;
+            border-color: rgba(56, 189, 248, 0.72);
+            background: linear-gradient(135deg, #0EA5E9, #2563EB);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+        }
+
+        .admin-broadcast-ticket-btn {
+            margin-top: 14px;
+            border-color: rgba(167, 139, 250, 0.72);
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            box-shadow: 0 10px 22px rgba(124, 58, 237, 0.28);
+        }
+
+        .toggle-email-btn:hover,
+        .add-rank-btn:hover,
+        .delete-account-btn:hover,
+        .remove-avatar-btn:hover,
+        .remove-animated-background-btn:hover,
+        .send-ticket-btn:hover,
+        .admin-broadcast-ticket-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.06);
+        }
+
+        .toggle-email-btn:active,
+        .add-rank-btn:active,
+        .delete-account-btn:active,
+        .remove-avatar-btn:active,
+        .remove-animated-background-btn:active,
+        .send-ticket-btn:active,
+        .admin-broadcast-ticket-btn:active {
+            transform: translateY(0);
+        }
+
+        .toggle-email-btn:focus-visible,
+        .add-rank-btn:focus-visible,
+        .delete-account-btn:focus-visible,
+        .remove-avatar-btn:focus-visible,
+        .remove-animated-background-btn:focus-visible,
+        .send-ticket-btn:focus-visible,
+        .admin-broadcast-ticket-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.35);
+        }
+
+        .toggle-email-btn[disabled],
+        .add-rank-btn[disabled],
+        .delete-account-btn[disabled],
+        .remove-avatar-btn[disabled],
+        .remove-animated-background-btn[disabled],
+        .send-ticket-btn[disabled],
+        .admin-broadcast-ticket-btn[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            filter: none;
+        }
+
+        .user-rank-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .user-rank-group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .user-rank-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #E2E8F0;
+        }
+
+        .user-rank-group-count {
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(129, 140, 248, 0.45);
+            color: #C4B5FD;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .user-rank-badge {
+            max-width: 100%;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 10px;
+            border-radius: 999px;
+        }
+
+        .user-rank-label {
+            max-width: 105px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .remove-rank-btn {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            min-height: 18px;
+            padding: 0;
+            margin-left: 2px;
+            border-radius: 999px;
+            border: 1px solid currentColor;
+            background: rgba(15, 23, 42, 0.5);
+            display: inline-grid;
+            place-items: center;
+            font-size: 13px;
+            line-height: 1;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.14s ease, background-color 0.14s ease, box-shadow 0.14s ease;
+            flex-shrink: 0;
+        }
+
+        .remove-rank-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(239, 68, 68, 0.22);
+            box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.45);
+        }
+
+        .remove-rank-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.4);
+        }
+
+        .toggle-user-ranks-btn {
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid rgba(129, 140, 248, 0.5);
+            background: rgba(15, 23, 42, 0.45);
+            color: #C4B5FD;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .toggle-user-ranks-btn:hover {
+            background: rgba(76, 29, 149, 0.45);
+            border-color: rgba(216, 180, 254, 0.7);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #CC0000;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            color: #EC4899;
+            font-weight: 600;
+            padding: 20px;
+        }
+
+        .admin-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .admin-overview-card {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(236, 72, 153, 0.18);
+            background:
+                linear-gradient(135deg, rgba(107, 70, 193, 0.2), rgba(236, 72, 153, 0.12)),
+                rgba(8, 11, 28, 0.78);
+            text-align: left;
+            color: #E2E8F0;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .admin-overview-card:hover,
+        .admin-overview-card.active {
+            transform: translateY(-2px);
+            border-color: rgba(244, 114, 182, 0.55);
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+        }
+
+        .admin-overview-card strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #FDF2F8;
+            font-size: 15px;
+        }
+
+        .admin-overview-card span {
+            display: block;
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid rgba(236, 72, 153, 0.14);
+            border-radius: 16px;
+            background: rgba(8, 11, 28, 0.45);
+            pointer-events: auto;
+            overflow: visible;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .tab-btn {
+            min-height: 70px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.62);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 4px;
+            pointer-events: auto;
+        }
+
+        .tab-btn small {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .tab-btn.active {
+            color: #FDF2F8;
+            border-color: rgba(236, 72, 153, 0.42);
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.28), rgba(236, 72, 153, 0.18));
+            box-shadow: inset 0 0 0 1px rgba(244, 114, 182, 0.2), 0 14px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .tab-btn.active small {
+            color: rgba(251, 207, 232, 0.82);
+        }
+
+        .tab-btn:hover {
+            color: #F9A8D4;
+            border-color: rgba(236, 72, 153, 0.25);
+        }
+
+        .admin-tab-intro {
+            margin-bottom: 18px;
+            padding: 18px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(167, 139, 250, 0.22);
+            background:
+                radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 30%),
+                linear-gradient(135deg, rgba(20, 15, 48, 0.9), rgba(45, 16, 89, 0.72));
+        }
+
+        .admin-tab-intro h2 {
+            margin: 0 0 8px;
+            color: #FDF2F8;
+            font-size: 24px;
+        }
+
+        .admin-tab-intro p {
+            margin: 0;
+            color: rgba(226, 232, 240, 0.75);
+            line-height: 1.55;
+        }
+
+        .admin-tab-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .admin-tab-tag {
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(236, 72, 153, 0.24);
+            background: rgba(236, 72, 153, 0.08);
+            color: #FBCFE8;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .ban-card {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .ban-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ban-info h3 {
+            margin: 0 0 5px 0;
+            color: #FF0000;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ban-details {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 3px 0;
+        }
+
+        .ban-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .ban-actions button {
+            padding: 6px 12px;
+            font-size: 11px;
+            background: #EC4899;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Estilos para postagens suspensas */
+        .suspension-card {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .suspension-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .suspension-info h3 {
+            margin: 0 0 5px 0;
+            color: #EC4899;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .suspension-details {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 3px 0;
+        }
+
+        .suspension-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .suspension-actions .btn-unsuspend,
+        .suspension-actions .btn-delete {
+            padding: 6px 12px;
+            font-size: 11px;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .suspension-actions .btn-unsuspend {
+            background: #6B46C1;
+        }
+
+        .suspension-actions .btn-unsuspend:hover {
+            background: #7C3AED;
+        }
+
+        .suspension-actions .btn-delete {
+            background: #DC2626;
+        }
+
+        .suspension-actions .btn-delete:hover {
+            background: #EF4444;
+        }
+
+        .ban-actions button {
+            padding: 6px 12px;
+            font-size: 11px;
+            background: #EC4899;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+        }
+
+        .ban-actions button:hover {
+            background: #6B46C1;
+        }
+
+        .ban-actions button.unban {
+            background: #22C55E;
+        }
+
+        .ban-actions button.unban:hover {
+            background: #16A34A;
+        }
+
+        .staff-hierarchy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+            gap: 14px;
+        }
+
+        .staff-hierarchy-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 0 0 16px;
+            flex-wrap: wrap;
+        }
+
+        .staff-hierarchy-toolbar-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .staff-hierarchy-toolbar-copy strong {
+            color: #F8FAFC;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .staff-hierarchy-toolbar-copy span {
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .staff-hierarchy-search-wrap {
+            width: min(100%, 420px);
+        }
+
+        .staff-hierarchy-search-input {
+            width: 100%;
+            min-height: 44px;
+            padding: 0 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(236, 72, 153, 0.42);
+            background: rgba(36, 20, 74, 0.92);
+            color: #F8FAFC;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        .staff-hierarchy-search-input::placeholder {
+            color: rgba(226, 232, 240, 0.42);
+        }
+
+        .staff-hierarchy-search-input:focus {
+            border-color: rgba(244, 114, 182, 0.72);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
+        }
+
+        .staff-hierarchy-card {
+            border-radius: 16px;
+            border: 1px solid rgba(236, 72, 153, 0.28);
+            background:
+                radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 30%),
+                linear-gradient(180deg, rgba(21, 18, 53, 0.96), rgba(33, 16, 74, 0.92));
+            padding: 16px;
+            box-shadow: 0 18px 36px rgba(2, 6, 23, 0.18);
+        }
+
+        .staff-hierarchy-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .staff-hierarchy-card-title {
+            margin: 0;
+            color: #FDF2F8;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .staff-hierarchy-card-desc {
+            margin: 4px 0 0;
+            color: rgba(226, 232, 240, 0.7);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .staff-hierarchy-level-badge {
+            min-width: 56px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(244, 114, 182, 0.36);
+            background: rgba(236, 72, 153, 0.12);
+            color: #FBCFE8;
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .staff-hierarchy-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .staff-hierarchy-meta span {
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(167, 139, 250, 0.28);
+            background: rgba(76, 29, 149, 0.26);
+            color: #DDD6FE;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .staff-hierarchy-form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .staff-hierarchy-tab-permissions {
+            display: grid;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid rgba(236, 72, 153, 0.24);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.38);
+        }
+
+        .admin-tab-access-details > summary {
+            color: #EC4899;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .staff-hierarchy-tab-permissions > strong {
+            color: #F9A8D4;
+            font-size: 13px;
+        }
+
+        .staff-hierarchy-tab-readonly {
+            color: rgba(226, 232, 240, 0.7);
+            font-size: 11px;
+        }
+
+        .staff-hierarchy-tab-permissions > div {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+            gap: 6px 10px;
+        }
+
+        .staff-hierarchy-inline {
+            display: grid;
+            grid-template-columns: 1fr 110px;
+            gap: 10px;
+        }
+
+        .staff-hierarchy-field label {
+            display: block;
+            margin-bottom: 6px;
+            color: #F472B6;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .staff-hierarchy-field input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .staff-hierarchy-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #E2E8F0;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .staff-hierarchy-check input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .staff-hierarchy-save-btn {
+            width: 100%;
+            min-height: 38px;
+            border-radius: 10px;
+            border: 1px solid rgba(236, 72, 153, 0.55);
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .staff-hierarchy-empty-state {
+            grid-column: 1 / -1;
+            border-radius: 16px;
+            border: 1px dashed rgba(244, 114, 182, 0.36);
+            background: rgba(30, 27, 75, 0.42);
+            color: rgba(226, 232, 240, 0.82);
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            padding: 28px 16px;
+        }
+    
+
+        .achievement-editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .achievement-editor-slot {
+            border: 1px solid rgba(129, 140, 248, 0.45);
+            border-radius: 12px;
+            padding: 12px;
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.72), rgba(36, 19, 80, 0.5));
+            color: #E2E8F0;
+        }
+
+        .achievement-bg-preview {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px;
+            border-radius: 14px;
+            min-height: 236px;
+            margin: 10px 0;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            background:
+                radial-gradient(120% 85% at 18% 18%, rgba(125, 211, 252, 0.14), transparent 48%),
+                radial-gradient(120% 100% at 80% 90%, rgba(236, 72, 153, 0.14), transparent 52%),
+                linear-gradient(160deg, rgba(16, 20, 45, 0.93), rgba(9, 12, 32, 0.9));
+            backdrop-filter: blur(3px);
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            box-shadow:
+                0 14px 28px rgba(4, 8, 28, 0.42),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+            text-align: center;
+            transition: transform 220ms ease, box-shadow 260ms ease, border-color 220ms ease, filter 220ms ease;
+            isolation: isolate;
+        }
+
+        .achievement-bg-preview:not(.is-empty):hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow:
+                0 24px 36px rgba(3, 7, 24, 0.56),
+                0 0 28px rgba(56, 189, 248, 0.18),
+                0 0 32px rgba(236, 72, 153, 0.18);
+        }
+
+        .achievement-bg-preview::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.09), transparent 45%),
+                linear-gradient(315deg, rgba(56, 189, 248, 0.06), transparent 42%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .achievement-bg-preview::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.12) 46%, transparent 100%),
+                repeating-linear-gradient(135deg, rgba(125, 211, 252, 0.12) 0 7px, transparent 7px 15px),
+                repeating-linear-gradient(45deg, rgba(236, 72, 153, 0.08) 0 9px, transparent 9px 18px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+            mix-blend-mode: screen;
+        }
+
+        .achievement-bg-preview > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .achievement-bg-preview[data-hover-gif="1"] {
+            --achievement-hover-gif-bg: none;
+        }
+
+        .achievement-bg-preview[data-hover-gif="1"]:hover {
+            background-image: var(--achievement-hover-gif-bg) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+        }
+
+        .achievement-bg-preview.is-empty::before {
+            content: "Sem pré-visualização";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(226, 232, 240, 0.55);
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            z-index: 0;
+        }
+
+        .achievement-editor-controls {
+            display: grid;
+            gap: 8px;
+        }
+
+        .achievement-general-perms {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(129, 140, 248, 0.35);
+            display: grid;
+            gap: 8px;
+        }
+
+        .achievement-general-perms label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .achievement-general-perms .perm-help {
+            margin: 0;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .achievement-general-perms.is-disabled {
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        .achievement-rank-selector,
+        .achievement-animation-selector {
+            display: grid;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .achievement-meta-editor {
+            display: grid;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 8px;
+            border: 1px solid rgba(236, 72, 153, 0.28);
+            border-radius: 8px;
+            background: rgba(2, 6, 23, 0.28);
+        }
+
+        .achievement-meta-editor label {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .achievement-meta-editor .achievement-meta-input,
+        .achievement-meta-editor .achievement-meta-textarea {
+            width: 100%;
+            background: rgba(2, 6, 23, 0.72);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            border-radius: 7px;
+            color: #F8FAFC;
+            padding: 7px 9px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .achievement-meta-editor .achievement-meta-textarea {
+            min-height: 52px;
+            resize: vertical;
+        }
+
+        .achievement-meta-editor .achievement-meta-input:focus,
+        .achievement-meta-editor .achievement-meta-textarea:focus {
+            border-color: #EC4899;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.16);
+        }
+
+        .achievement-meta-editor .meta-help {
+            margin: 2px 0 0 0;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.58);
+        }
+
+        .achievement-meta-editor.is-disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .achievement-rank-selector label,
+        .achievement-animation-selector label {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .achievement-rank-select,
+        .achievement-animation-select {
+            width: 100%;
+            height: 36px;
+            padding: 0 10px;
+            background: rgba(2, 6, 23, 0.72);
+            border: 1px solid rgba(236, 72, 153, 0.45);
+            border-radius: 8px;
+            color: #F8FAFC;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .achievement-rank-select:focus,
+        .achievement-animation-select:focus {
+            border-color: #EC4899;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.18);
+        }
+
+        .achievement-editor-controls input[type="file"] {
+            width: 100%;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .achievement-editor-controls input[type="file"]::file-selector-button {
+            margin-right: 8px;
+            padding: 7px 10px;
+            border: 1px solid rgba(236, 72, 153, 0.6);
+            border-radius: 7px;
+            background: linear-gradient(135deg, #7C3AED, #9333EA);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .achievement-preview-content {
+            display: grid;
+            gap: 8px;
+            justify-items: center;
+        }
+
+        .achievement-preview-name {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .achievement-preview-desc {
+            font-size: 13px;
+            line-height: 1.3;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            min-height: 52px;
+            max-width: 28ch;
+            position: relative;
+            z-index: 2;
+        }
+
+        .achievement-preview-goal {
+            display: inline-flex;
+            width: fit-content;
+            padding: 5px 9px;
+            border-radius: 8px;
+            border: 1px solid color-mix(in srgb, var(--achievement-color, #C4B5FD) 45%, transparent);
+            background: rgba(0, 0, 0, 0.44);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--achievement-color, #C4B5FD);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+            position: relative;
+            z-index: 2;
+        }
+
+        .achievement-preview-badge {
+            align-self: center;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid color-mix(in srgb, var(--achievement-color, #C4B5FD) 55%, white 45%);
+            background: color-mix(in srgb, var(--achievement-color, #C4B5FD) 40%, transparent);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 2;
+        }
+
+        .achievement-editor-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .achievement-editor-btn {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(129, 140, 248, 0.55);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .achievement-editor-btn.save {
+            background: linear-gradient(135deg, #4C1D95, #7C3AED);
+        }
+
+        .achievement-editor-btn.clear {
+            background: linear-gradient(135deg, #1E293B, #334155);
+        }
+
+        .achievement-custom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
+
+        .custom-achievement-bg-card .achievement-preview-name,
+        .custom-achievement-bg-card .achievement-preview-desc {
+            font-size: inherit;
+        }
+
+        @media (max-width: 900px) {
+            .achievement-editor-grid,
+            .achievement-custom-grid,
+            .staff-hierarchy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #users-tab .users-table th:last-child,
+            #users-tab .users-table td:last-child {
+                min-width: 245px;
+            }
+
+            #users-tab .users-table th:nth-child(3),
+            #users-tab .users-table td:nth-child(3) {
+                width: 32%;
+                min-width: 260px;
+            }
+
+            .user-actions-stack {
+                min-width: 230px;
+            }
+
+            .rank-select {
+                grid-template-columns: 1fr;
+            }
+
+            .user-inline-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .users-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .users-search-field {
+                max-width: none;
+            }
+
+            .add-rank-btn,
+            .delete-account-btn,
+            .remove-avatar-btn,
+            .remove-animated-background-btn,
+            .send-ticket-btn {
+                width: 100%;
+            }
+        }
+
+        .rank-themed-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            border: 1px solid rgba(236, 72, 153, 0.75);
+            background: linear-gradient(135deg, rgba(2, 6, 23, 0.92), rgba(30, 41, 59, 0.92));
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+        }
+
+        .rank-themed-checkbox::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            clip-path: polygon(14% 52%, 0 66%, 40% 100%, 100% 20%, 84% 6%, 40% 68%);
+            transform: scale(0);
+            transition: transform 0.14s ease;
+            background: linear-gradient(135deg, #FBCFE8, #FFFFFF);
+        }
+
+        .rank-themed-checkbox:checked::before {
+            transform: scale(1);
+        }
+
+        #adminPanelCheckboxContainer { --option-accent: #10B981; }
+        #visibilityCheckboxContainer { --option-accent: #3B82F6; }
+        #downloadManagementCheckboxContainer { --option-accent: #EC4899; }
+        #orderAllRanksCheckboxContainer { --option-accent: #F59E0B; }
+        #animatedProfileCheckboxContainer { --option-accent: #38BDF8; }
+        #rankCanChangeOwnColorContainer { --option-accent: #F472B6; }
+
+        #adminPanelCheckboxContainer input[type="checkbox"],
+        #visibilityCheckboxContainer input[type="checkbox"],
+        #downloadManagementCheckboxContainer input[type="checkbox"],
+        #orderAllRanksCheckboxContainer input[type="checkbox"],
+        #animatedProfileCheckboxContainer input[type="checkbox"],
+        #rankCanChangeOwnColorContainer input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px !important;
+            height: 18px !important;
+            border-radius: 5px;
+            border: 1px solid var(--option-accent, #EC4899);
+            background: linear-gradient(145deg, rgba(2, 6, 23, 0.92), rgba(30, 41, 59, 0.9));
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            margin: 0;
+            transition: box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+        }
+
+        #adminPanelCheckboxContainer input[type="checkbox"]::before,
+        #visibilityCheckboxContainer input[type="checkbox"]::before,
+        #downloadManagementCheckboxContainer input[type="checkbox"]::before,
+        #orderAllRanksCheckboxContainer input[type="checkbox"]::before,
+        #animatedProfileCheckboxContainer input[type="checkbox"]::before,
+        #rankCanChangeOwnColorContainer input[type="checkbox"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            clip-path: polygon(14% 52%, 0 66%, 40% 100%, 100% 20%, 84% 6%, 40% 68%);
+            transform: scale(0);
+            transition: transform 0.14s ease;
+            background: var(--option-accent, #EC4899);
+        }
+
+        #adminPanelCheckboxContainer input[type="checkbox"]:checked,
+        #visibilityCheckboxContainer input[type="checkbox"]:checked,
+        #downloadManagementCheckboxContainer input[type="checkbox"]:checked,
+        #orderAllRanksCheckboxContainer input[type="checkbox"]:checked,
+        #animatedProfileCheckboxContainer input[type="checkbox"]:checked,
+        #rankCanChangeOwnColorContainer input[type="checkbox"]:checked {
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--option-accent, #EC4899) 35%, transparent);
+            background: color-mix(in srgb, var(--option-accent, #EC4899) 20%, rgba(2, 6, 23, 0.9));
+        }
+
+        #adminPanelCheckboxContainer input[type="checkbox"]:checked::before,
+        #visibilityCheckboxContainer input[type="checkbox"]:checked::before,
+        #downloadManagementCheckboxContainer input[type="checkbox"]:checked::before,
+        #orderAllRanksCheckboxContainer input[type="checkbox"]:checked::before,
+        #animatedProfileCheckboxContainer input[type="checkbox"]:checked::before,
+        #rankCanChangeOwnColorContainer input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        #adminPanelCheckboxContainer input[type="checkbox"]:focus-visible,
+        #visibilityCheckboxContainer input[type="checkbox"]:focus-visible,
+        #downloadManagementCheckboxContainer input[type="checkbox"]:focus-visible,
+        #orderAllRanksCheckboxContainer input[type="checkbox"]:focus-visible,
+        #animatedProfileCheckboxContainer input[type="checkbox"]:focus-visible,
+        #rankCanChangeOwnColorContainer input[type="checkbox"]:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--option-accent, #EC4899) 48%, transparent);
+        }
+
+        #permCanPostDownloads { --perm-accent: #F9A8D4; }
+        #permCanManageDownloads { --perm-accent: #F472B6; }
+        #permCanOrderFixedRanks { --perm-accent: #FBBF24; }
+        #permCanAccessAdminPanel { --perm-accent: #34D399; }
+        #permCanUseAnimatedProfile { --perm-accent: #38BDF8; }
+        #permCanChangeRankColor { --perm-accent: #F472B6; }
+
+        #post-permissions-tab input[type="checkbox"][id^="permCan"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px !important;
+            height: 16px !important;
+            border-radius: 4px;
+            border: 1px solid var(--perm-accent, #EC4899);
+            background: linear-gradient(145deg, rgba(2, 6, 23, 0.9), rgba(30, 41, 59, 0.88));
+            display: inline-grid;
+            place-content: center;
+            margin: 0;
+            cursor: pointer;
+            transition: box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+        }
+
+        #post-permissions-tab input[type="checkbox"][id^="permCan"]::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            clip-path: polygon(14% 52%, 0 66%, 40% 100%, 100% 20%, 84% 6%, 40% 68%);
+            transform: scale(0);
+            transition: transform 0.14s ease;
+            background: var(--perm-accent, #EC4899);
+        }
+
+        #post-permissions-tab input[type="checkbox"][id^="permCan"]:checked {
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--perm-accent, #EC4899) 34%, transparent);
+            background: color-mix(in srgb, var(--perm-accent, #EC4899) 20%, rgba(2, 6, 23, 0.9));
+        }
+
+        #post-permissions-tab input[type="checkbox"][id^="permCan"]:checked::before {
+            transform: scale(1);
+        }
+
+        #post-permissions-tab input[type="checkbox"][id^="permCan"]:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--perm-accent, #EC4899) 48%, transparent);
+        }
+
+        #bans-tab #banType {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            min-height: 40px;
+            padding: 0 36px 0 12px;
+            border: 1px solid rgba(236, 72, 153, 0.55);
+            border-radius: 8px;
+            color: #F8FAFC;
+            font-weight: 600;
+            outline: none;
+            background-image:
+                linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(39, 13, 82, 0.78)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23F8FAFC' d='M5 6 0 0h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat, no-repeat;
+            background-size: 100% 100%, 10px 6px;
+            background-position: 0 0, right 12px center;
+        }
+
+        #bans-tab #banType:focus-visible {
+            border-color: rgba(244, 114, 182, 0.95);
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.24);
+        }
+
+        #bans-tab #banType option {
+            color: #F8FAFC;
+            background: #1E1B4B;
+        }
+
+        .admin-container input[type="file"] {
+            width: 100%;
+            max-width: 100%;
+            min-height: 36px;
+            padding: 4px 8px;
+            border: 1px solid rgba(236, 72, 153, 0.45);
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(2, 6, 23, 0.78), rgba(30, 41, 59, 0.6));
+            color: rgba(241, 245, 249, 0.9);
+            font-size: 12px;
+        }
+
+        .admin-container input[type="file"]::file-selector-button {
+            margin-right: 10px;
+            padding: 7px 12px;
+            border: 1px solid rgba(236, 72, 153, 0.7);
+            border-radius: 7px;
+            background: linear-gradient(135deg, #EC4899, #7C3AED);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.16s ease, transform 0.16s ease;
+        }
+
+        .admin-container input[type="file"]::-webkit-file-upload-button {
+            margin-right: 10px;
+            padding: 7px 12px;
+            border: 1px solid rgba(236, 72, 153, 0.7);
+            border-radius: 7px;
+            background: linear-gradient(135deg, #EC4899, #7C3AED);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.16s ease, transform 0.16s ease;
+        }
+
+        .admin-container input[type="file"]::file-selector-button:hover,
+        .admin-container input[type="file"]::-webkit-file-upload-button:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        #editRankModal .rank-themed-file-input {
+            width: 100%;
+            max-width: 100%;
+            min-height: 36px;
+            padding: 4px 8px;
+            border: 1px solid rgba(236, 72, 153, 0.45);
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(2, 6, 23, 0.8), rgba(30, 41, 59, 0.62));
+            color: rgba(241, 245, 249, 0.9);
+            font-size: 12px;
+        }
+
+        #editRankModal .rank-themed-file-input::file-selector-button {
+            margin-right: 10px;
+            padding: 7px 12px;
+            border: 1px solid rgba(236, 72, 153, 0.7);
+            border-radius: 7px;
+            background: linear-gradient(135deg, #EC4899, #7C3AED);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.16s ease, transform 0.16s ease;
+        }
+
+        #editRankModal .rank-themed-file-input::-webkit-file-upload-button {
+            margin-right: 10px;
+            padding: 7px 12px;
+            border: 1px solid rgba(236, 72, 153, 0.7);
+            border-radius: 7px;
+            background: linear-gradient(135deg, #EC4899, #7C3AED);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.16s ease, transform 0.16s ease;
+        }
+
+        #editRankModal .rank-themed-file-input::file-selector-button:hover,
+        #editRankModal .rank-themed-file-input::-webkit-file-upload-button:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        #editRankModal .edit-rank-option-checkbox {
+            border-color: var(--option-accent, #EC4899);
+            background: linear-gradient(145deg, rgba(2, 6, 23, 0.92), rgba(30, 41, 59, 0.9));
+            transition: box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+        }
+
+        #editRankModal .edit-rank-option-checkbox::before {
+            background: var(--option-accent, #EC4899);
+        }
+
+        #editRankModal .edit-rank-option-checkbox:checked {
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--option-accent, #EC4899) 35%, transparent);
+            background: color-mix(in srgb, var(--option-accent, #EC4899) 20%, rgba(2, 6, 23, 0.9));
+        }
+
+        #editRankModal .edit-rank-option-checkbox:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--option-accent, #EC4899) 48%, transparent);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="smoke-particle smoke-particle-1"></div>
+        <div class="smoke-particle smoke-particle-2"></div>
+        <div class="smoke-particle smoke-particle-3"></div>
+        <div class="smoke-particle smoke-particle-4"></div>
+        <div class="smoke-particle smoke-particle-5"></div>
+        
+        <div class="light-flicker light-1"></div>
+        <div class="light-flicker light-2"></div>
+        <div class="light-flicker light-3"></div>
+    </div>
+
+    <button class="logout-btn" id="backToProfileBtn">Voltar</button>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Painel Administrativo</h1>
+            <p>Gerenciar conquistas e usuários da guilda</p>
+        </div>
+            <div class="navbar-buttons" style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;"></div>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="ranks" data-admin-tab-access="ranks" hidden>Conquistas<small>Criar, revisar e listar</small></button>
+            <button class="tab-btn" data-tab="events" data-admin-tab-access="events" hidden>Eventos<small>Gerenciamento manual</small></button>
+            <button class="tab-btn" data-tab="achievement-editor" data-admin-tab-access="appearance" hidden>Aparencia<small>Visual e animacao</small></button>
+            <button class="tab-btn" data-tab="users" data-admin-tab-access="users" hidden>Usuarios<small>Conquistas e acoes da conta</small></button>
+            <button class="tab-btn" data-tab="account" data-admin-tab-access="account" hidden>Conta do usuário<small>Opções de login</small></button>
+            <button class="tab-btn" data-tab="sendmail" data-admin-tab-access="sendmail" hidden>Sendmail<small>Email manual e verificacoes</small></button>
+            <button class="tab-btn" data-tab="staff-hierarchy" data-admin-tab-access="staffHierarchy" data-hierarchy-view="1" hidden>Hierarquia<small>Staff e niveis</small></button>
+            <button class="tab-btn" data-tab="post-permissions" data-admin-tab-access="postPermissions" hidden>Permissoes<small>Downloads e acessos</small></button>
+            <button class="tab-btn" data-tab="navbar" data-admin-tab-access="navbar" hidden>Navbar<small>Links e descrições</small></button>
+            <button class="tab-btn" data-tab="bans" data-admin-tab-access="bans" hidden>Moderacao<small>Banimentos e suspensoes</small></button>
+            <button class="tab-btn" data-tab="suspended-posts" data-admin-tab-access="suspendedPosts" hidden>Postagens Suspensas<small>Revisar e gerenciar</small></button>
+        </div>
+
+        <!-- TAB: Gerenciar Conquistas Customizáveis -->
+        <div id="ranks-tab" class="tab-content active" data-admin-tab-access="ranks" hidden>
+            <div class="admin-tab-intro">
+                <h2>Conquistas da Guilda</h2>
+                <p>Esta area concentra a estrutura principal das conquistas: criacao de novas conquistas, revisao das conquistas padrao e manutencao das personalizadas.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Criar conquista</span>
+                    <span class="admin-tab-tag">Conquistas padrao</span>
+                    <span class="admin-tab-tag">Conquistas personalizadas</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Criar Nova Conquista Customizável</h2>
+                <form class="form-group" id="createRankForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nome da Conquista *</label>
+                            <input type="text" placeholder="Ex: Fundador" required id="rankName" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Cor da Conquista *</label>
+                            <input type="color" required id="rankColor" class="color-input" title="Cor da Conquista" style="width: 100%; height: 40px;">
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descrição *</label>
+                        <textarea placeholder="Ex: Fundador e proprietário da HOLIDAY Guild" required id="rankDescription" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #EC4899; border-radius: 5px; color: white; font-family: inherit; height: 70px; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Texto Customizável (Conquistado, Membro, etc) *</label>
+                        <input type="text" placeholder="Ex: Conquistado em Jul/2025" required id="rankCustomText" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Imagem de Fundo (Opcional - URL ou upload)</label>
+                        <input type="text" placeholder="Cole a URL da imagem ou deixe em branco" id="rankBackgroundImage" style="width: 100%; box-sizing: border-box;">
+                        <input type="file" accept="image/*" id="rankBackgroundImageFile" style="width: 100%; box-sizing: border-box; margin-top: 5px;">
+                        <small style="color: rgba(255, 255, 255, 0.5); display: block; margin-top: 5px;">Tamanho recomendado: 250x150px</small>
+                    </div>
+
+                    <div id="adminPanelCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #10B981; font-weight: 600;">
+                            <input type="checkbox" id="rankEnableAdminPanel" class="rank-themed-checkbox" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Habilitar Painel Admin para esta Conquista</span>
+                        </label>
+                        <small style="color: rgba(16, 185, 129, 0.8); display: block; margin-top: 8px;">Usuários com esta conquista poderão acessar o painel de administração com permissões limitadas</small>
+                    </div>
+
+                    <div id="visibilityCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #3B82F6; font-weight: 600;">
+                            <input type="checkbox" id="rankIsVisible" checked style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir Usuário Escolher (Exibir/Ocultar)</span>
+                        </label>
+                        <small style="color: rgba(59, 130, 246, 0.8); display: block; margin-top: 8px;">Marcado: usuário pode escolher exibir ou não a conquista. Desmarcado: conquista fica fixa nas conquistas (como progressão)</small>
+                    </div>
+
+                    <div id="downloadManagementCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #EC4899; font-weight: 600;">
+                            <input type="checkbox" id="rankCanManageDownloads" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Dar Administração de Downloads</span>
+                        </label>
+                        <small style="color: rgba(236, 72, 153, 0.8); display: block; margin-top: 8px;">Usuários com esta conquista terão administração de downloads: poderão editar e excluir os próprios downloads e também os de outros usuários. Sem isso, o usuário comum só mexe nas próprias postagens.</small>
+                    </div>
+
+                    <div id="orderAllRanksCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #F59E0B; font-weight: 600;">
+                            <input type="checkbox" id="rankCanOrderAllRanks" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir Usuário Ordenar Todas as conquistas (incluindo fixas)</span>
+                        </label>
+                        <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com esta conquista, o usuário pode reordenar também conquistas fixas na seção Minhas Conquistas.</small>
+                    </div>
+
+                    <div id="animatedProfileCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #38BDF8; font-weight: 600;">
+                            <input type="checkbox" id="rankCanUseAnimatedProfile" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir usuário ter Card Animado</span>
+                        </label>
+                        <small style="color: rgba(56, 189, 248, 0.85); display: block; margin-top: 8px;">Com esta conquista, aparecerá o botão "Perfil Animado" no perfil do usuário.</small>
+                    </div>
+
+                    <div id="rankCanChangeOwnColorContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(244, 114, 182, 0.1); border: 1px solid rgba(244, 114, 182, 0.45); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #F472B6; font-weight: 600;">
+                            <input type="checkbox" id="rankCanChangeOwnColor" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir usuário mudar cor desta conquista</span>
+                        </label>
+                        <small style="color: rgba(244, 114, 182, 0.85); display: block; margin-top: 8px;">Ativa a edição de cor apenas para este card (quando o usuário também tiver permissão individual).</small>
+                    </div>
+
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Criar conquista</button>
+                </form>
+            </div>
+
+
+            <div class="admin-section">
+                <h2>Conquistas Padrão (Não Removíveis)</h2>
+                <div id="defaultRanksContainer" class="ranks-list loading">Carregando conquistas padrão...</div>
+            </div>
+
+            <div class="admin-section">
+                <h2>Conquistas Customizáveis</h2>
+                <div id="customRanksContainer" class="ranks-list loading">Carregando conquistas customizáveis...</div>
+            </div>
+        </div>
+
+        <div id="events-tab" class="tab-content" data-admin-tab-access="events" hidden>
+            <div class="admin-tab-intro">
+                <h2>Eventos</h2>
+                <p>Crie aqui um evento manual como conquista personalizada, para depois atribuir aos usuários quando quiser.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Manual</span>
+                    <span class="admin-tab-tag">Conquista personalizada</span>
+                    <span class="admin-tab-tag">Atribuição manual</span>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2>Criar evento manual</h2>
+                <p style="color: rgba(255,255,255,0.75); font-size: 13px; margin-top: -6px; margin-bottom: 10px;">Preencha os dados básicos da conquista manual e ela aparecerá no painel como evento/custom rank.</p>
+                <form id="createManualEventForm" class="form-group" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #F59E0B; font-size: 12px; display: block; margin-bottom: 5px;">Nome da conquista *</label>
+                            <input id="manualEventName" type="text" placeholder="Ex: Festival da Guilda" required style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #F59E0B; font-size: 12px; display: block; margin-bottom: 5px;">Cor *</label>
+                            <input id="manualEventColor" type="color" value="#F59E0B" required style="width: 100%; height: 40px; box-sizing: border-box;">
+                        </div>
+                    </div>
+                    <div style="width: 100%;">
+                        <label style="color: #F59E0B; font-size: 12px; display: block; margin-bottom: 5px;">Descrição da conquista</label>
+                        <textarea id="manualEventDescription" placeholder="Descreva a conquista manual" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #F59E0B; border-radius: 5px; color: white; font-family: inherit; min-height: 70px; resize: vertical;"></textarea>
+                    </div>
+                    <div style="width: 100%;">
+                        <label style="color: #F59E0B; font-size: 12px; display: block; margin-bottom: 5px;">Texto customizável (opcional)</label>
+                        <input id="manualEventCustomText" type="text" placeholder="Ex: Conquista dada por evento da guilda" style="width: 100%; box-sizing: border-box;">
+                        <small style="color: rgba(255,255,255,0.72); font-size: 12px; display: block; margin-top: 4px;">Esse é um texto extra opcional da conquista; a descrição principal fica no campo acima.</small>
+                    </div>
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #F59E0B; font-size: 12px; display: block; margin-bottom: 5px;">Início</label>
+                            <input id="manualEventStartDate" type="date" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #F59E0B; font-size: 12px; display: block; margin-bottom: 5px;">Fim</label>
+                            <input id="manualEventEndDate" type="date" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+                    <label style="display: flex; align-items: center; gap: 10px; color: #FBBF24; font-weight: 600;">
+                        <input id="manualEventAutoAwardOnLogin" type="checkbox" style="width: 18px; height: 18px;">
+                        <span>Conceder ao usuário quando ele logar</span>
+                    </label>
+                    <button type="submit" style="margin-top: 6px; width: 100%;">Criar evento manual</button>
+                </form>
+
+                <div style="margin-top: 18px; width: 100%; border-top: 1px solid rgba(245, 158, 11, 0.18); padding-top: 14px;">
+                    <h3 style="margin: 0 0 8px 0; color: #FBBF24; font-size: 15px;">Eventos criados / em andamento</h3>
+                    <p style="margin: 0 0 10px 0; color: rgba(255,255,255,0.72); font-size: 12px;">Aqui aparecem os eventos manuais já criados. Você pode encerrar ou cancelar um evento antes da data final.</p>
+                    <div id="manualEventsList" class="ranks-list loading" style="display: flex; flex-direction: column; gap: 10px;">Carregando eventos...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="achievement-editor-tab" class="tab-content" data-admin-tab-access="appearance" hidden>
+            <div class="admin-tab-intro">
+                <h2>Visual das Conquistas</h2>
+                <p>Aqui voce edita fundo, animacao, GIF e pre-visualizacao dos cards. Tudo que for aparencia das conquistas fica reunido nesta area.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Progressão</span>
+                    <span class="admin-tab-tag">Likes</span>
+                    <span class="admin-tab-tag">Postagens</span>
+                    <span class="admin-tab-tag">Personalizados</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Fundos por Conquista</h2>
+                <p style="margin: 0 0 12px 0; color: rgba(255,255,255,0.75); font-size: 13px;">
+                    Escolha a conquista pelo nome, visualize o card completo e aplique imagem/GIF (até 20MB).
+                </p>
+                <div class="achievement-editor-grid">
+                    <div class="achievement-editor-slot" data-group="like_achievement">
+                        <h3 style="color: #67E8F9;">Likes</h3>
+                        <div class="achievement-rank-selector"><label for="achievementRankSelect-like_achievement">Conquista</label><select id="achievementRankSelect-like_achievement" class="achievement-rank-select" data-group="like_achievement"></select></div>
+                        <div class="achievement-animation-selector"><label for="achievementAnimationMode-like_achievement">Modo de animação</label><select id="achievementAnimationMode-like_achievement" class="achievement-animation-select" data-group="like_achievement"><option value="hover">Animar só no hover</option><option value="always">Animar sempre</option></select></div>
+                        <div id="achievementMetaEditor-like_achievement" class="achievement-meta-editor">
+                            <label for="achievementNameInput-like_achievement">Nome</label>
+                            <input id="achievementNameInput-like_achievement" class="achievement-meta-input" data-group="like_achievement" type="text" maxlength="60">
+                            <label for="achievementDescriptionInput-like_achievement">Descrição</label>
+                            <textarea id="achievementDescriptionInput-like_achievement" class="achievement-meta-textarea" data-group="like_achievement" maxlength="220"></textarea>
+                            <label for="achievementCustomTextInput-like_achievement">Texto customizável</label>
+                            <input id="achievementCustomTextInput-like_achievement" class="achievement-meta-input" data-group="like_achievement" type="text" maxlength="80">
+                            <p id="achievementMetaHelp-like_achievement" class="meta-help">Nome, descrição e texto serão salvos junto com o botão Salvar.</p>
+                        </div>
+                        <div id="achievementBgPreview-like_achievement" class="achievement-bg-preview is-empty">
+                            <div class="achievement-preview-content">
+                                <div class="achievement-preview-name">Conquista</div>
+                                <div class="achievement-preview-desc">Descrição da conquista.</div>
+                                <div class="achievement-preview-goal">Conquistado</div>
+                            </div>
+                            <div class="achievement-preview-badge">Conquistado</div>
+                        </div>
+                        <div class="achievement-editor-controls"><input type="file" id="achievementBgFile-like_achievement" accept=".gif,.png,.jpg,.jpeg,.webp,image/gif,image/png,image/jpeg,image/webp"><div class="achievement-editor-actions"><button type="button" class="achievement-editor-btn save save-achievement-rank-bg-btn" data-group="like_achievement">Salvar</button><button type="button" class="achievement-editor-btn clear clear-achievement-rank-bg-btn" data-group="like_achievement">Remover</button></div></div>
+                    </div>
+                    <div class="achievement-editor-slot" data-group="post_achievement">
+                        <h3 style="color: #F9A8D4;">Postagens</h3>
+                        <div class="achievement-rank-selector"><label for="achievementRankSelect-post_achievement">Conquista</label><select id="achievementRankSelect-post_achievement" class="achievement-rank-select" data-group="post_achievement"></select></div>
+                        <div class="achievement-animation-selector"><label for="achievementAnimationMode-post_achievement">Modo de animação</label><select id="achievementAnimationMode-post_achievement" class="achievement-animation-select" data-group="post_achievement"><option value="hover">Animar só no hover</option><option value="always">Animar sempre</option></select></div>
+                        <div id="achievementMetaEditor-post_achievement" class="achievement-meta-editor">
+                            <label for="achievementNameInput-post_achievement">Nome</label>
+                            <input id="achievementNameInput-post_achievement" class="achievement-meta-input" data-group="post_achievement" type="text" maxlength="60">
+                            <label for="achievementDescriptionInput-post_achievement">Descrição</label>
+                            <textarea id="achievementDescriptionInput-post_achievement" class="achievement-meta-textarea" data-group="post_achievement" maxlength="220"></textarea>
+                            <label for="achievementCustomTextInput-post_achievement">Texto customizável</label>
+                            <input id="achievementCustomTextInput-post_achievement" class="achievement-meta-input" data-group="post_achievement" type="text" maxlength="80">
+                            <p id="achievementMetaHelp-post_achievement" class="meta-help">Nome, descrição e texto serão salvos junto com o botão Salvar.</p>
+                        </div>
+                        <div id="achievementBgPreview-post_achievement" class="achievement-bg-preview is-empty">
+                            <div class="achievement-preview-content">
+                                <div class="achievement-preview-name">Conquista</div>
+                                <div class="achievement-preview-desc">Descrição da conquista.</div>
+                                <div class="achievement-preview-goal">Conquistado</div>
+                            </div>
+                            <div class="achievement-preview-badge">Conquistado</div>
+                        </div>
+                        <div class="achievement-editor-controls"><input type="file" id="achievementBgFile-post_achievement" accept=".gif,.png,.jpg,.jpeg,.webp,image/gif,image/png,image/jpeg,image/webp"><div class="achievement-editor-actions"><button type="button" class="achievement-editor-btn save save-achievement-rank-bg-btn" data-group="post_achievement">Salvar</button><button type="button" class="achievement-editor-btn clear clear-achievement-rank-bg-btn" data-group="post_achievement">Remover</button></div></div>
+                    </div>
+                    <div class="achievement-editor-slot" data-group="progression">
+                        <h3 style="color: #C084FC;">Progressão</h3>
+                        <div class="achievement-rank-selector"><label for="achievementRankSelect-progression">Conquista</label><select id="achievementRankSelect-progression" class="achievement-rank-select" data-group="progression"></select></div>
+                        <div class="achievement-animation-selector"><label for="achievementAnimationMode-progression">Modo de animação</label><select id="achievementAnimationMode-progression" class="achievement-animation-select" data-group="progression"><option value="hover">Animar só no hover</option><option value="always">Animar sempre</option></select></div>
+                        <div id="achievementMetaEditor-progression" class="achievement-meta-editor">
+                            <label for="achievementNameInput-progression">Nome</label>
+                            <input id="achievementNameInput-progression" class="achievement-meta-input" data-group="progression" type="text" maxlength="60">
+                            <label for="achievementDescriptionInput-progression">Descrição</label>
+                            <textarea id="achievementDescriptionInput-progression" class="achievement-meta-textarea" data-group="progression" maxlength="220"></textarea>
+                            <label for="achievementCustomTextInput-progression">Texto customizável</label>
+                            <input id="achievementCustomTextInput-progression" class="achievement-meta-input" data-group="progression" type="text" maxlength="80">
+                            <p id="achievementMetaHelp-progression" class="meta-help">Nome, descrição e texto serão salvos junto com o botão Salvar.</p>
+                        </div>
+                        <div id="achievementBgPreview-progression" class="achievement-bg-preview is-empty">
+                            <div class="achievement-preview-content">
+                                <div class="achievement-preview-name">Conquista</div>
+                                <div class="achievement-preview-desc">Descrição da conquista.</div>
+                                <div class="achievement-preview-goal">Conquistado</div>
+                            </div>
+                            <div class="achievement-preview-badge">Conquistado</div>
+                        </div>
+                        <div class="achievement-editor-controls"><input type="file" id="achievementBgFile-progression" accept=".gif,.png,.jpg,.jpeg,.webp,image/gif,image/png,image/jpeg,image/webp"><div class="achievement-editor-actions"><button type="button" class="achievement-editor-btn save save-achievement-rank-bg-btn" data-group="progression">Salvar</button><button type="button" class="achievement-editor-btn clear clear-achievement-rank-bg-btn" data-group="progression">Remover</button></div></div>
+                    </div>
+                    <div class="achievement-editor-slot" data-group="general">
+                        <h3 style="color: #A7F3D0;">Personalizados</h3>
+                        <div class="achievement-rank-selector"><label for="achievementRankSelect-general">Conquista</label><select id="achievementRankSelect-general" class="achievement-rank-select" data-group="general"></select></div>
+                        <div class="achievement-animation-selector"><label for="achievementAnimationMode-general">Modo de animação</label><select id="achievementAnimationMode-general" class="achievement-animation-select" data-group="general"><option value="hover">Animar só no hover</option><option value="always">Animar sempre</option></select></div>
+                        <div id="achievementMetaEditor-general" class="achievement-meta-editor">
+                            <label for="achievementNameInput-general">Nome</label>
+                            <input id="achievementNameInput-general" class="achievement-meta-input" data-group="general" type="text" maxlength="60">
+                            <label for="achievementDescriptionInput-general">Descrição</label>
+                            <textarea id="achievementDescriptionInput-general" class="achievement-meta-textarea" data-group="general" maxlength="220"></textarea>
+                            <label for="achievementCustomTextInput-general">Texto customizável</label>
+                            <input id="achievementCustomTextInput-general" class="achievement-meta-input" data-group="general" type="text" maxlength="80">
+                            <label id="achievementColorControl-general" for="achievementColorInput-general" style="display: none;">Cor do Fundador</label>
+                            <input id="achievementColorInput-general" class="achievement-color-input" data-group="general" type="color" value="#ff0066" style="display: none;">
+                            <p id="achievementMetaHelp-general" class="meta-help">Nome, descrição e texto serão salvos junto com o botão Salvar.</p>
+                        </div>
+                        <div id="achievementBgPreview-general" class="achievement-bg-preview is-empty">
+                            <div class="achievement-preview-content">
+                                <div class="achievement-preview-name">Conquista</div>
+                                <div class="achievement-preview-desc">Descrição da conquista.</div>
+                                <div class="achievement-preview-goal">Conquistado</div>
+                            </div>
+                            <div class="achievement-preview-badge">Conquistado</div>
+                        </div>
+                        <div class="achievement-editor-controls"><input type="file" id="achievementBgFile-general" accept=".gif,.png,.jpg,.jpeg,.webp,image/gif,image/png,image/jpeg,image/webp"><div class="achievement-editor-actions"><button type="button" class="achievement-editor-btn save save-achievement-rank-bg-btn" data-group="general">Salvar</button><button type="button" class="achievement-editor-btn clear clear-achievement-rank-bg-btn" data-group="general">Remover</button></div></div>
+                        <div id="achievementGeneralPermissions" class="achievement-general-perms is-disabled" style="display: none;">
+                            <label style="color: #10B981;"><input type="checkbox" id="generalPermEnableAdminPanel" class="rank-themed-checkbox">Habilitar Painel Admin</label>
+                            <label style="color: #3B82F6;"><input type="checkbox" id="generalPermIsVisible" class="rank-themed-checkbox">Permitir Usuário Escolher (Exibir/Ocultar)</label>
+                            <label style="color: #EC4899;"><input type="checkbox" id="generalPermCanManageDownloads" class="rank-themed-checkbox">Dar Administração de Downloads</label>
+                            <label style="color: #F59E0B;"><input type="checkbox" id="generalPermCanOrderAllRanks" class="rank-themed-checkbox">Permitir Ordenar Todas as Conquistas</label>
+                            <label style="color: #38BDF8;"><input type="checkbox" id="generalPermCanUseAnimatedProfile" class="rank-themed-checkbox">Permitir Card Animado</label>
+                            <label style="color: #F472B6;"><input type="checkbox" id="generalPermCanChangeOwnColor" class="rank-themed-checkbox">Permitir usuário mudar cor desta conquista</label>
+                            <p id="achievementGeneralPermsHelp" class="perm-help">Essas opções só valem para conquistas personalizadas selecionadas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Gerenciar Usuários -->
+        <div id="users-tab" class="tab-content" data-admin-tab-access="users" hidden>
+            <div class="admin-tab-intro">
+                <h2>Usuarios e Conquistas</h2>
+                <p>Use esta area para administrar o que cada membro possui: conquistas atribuidas, ordem das conquistas e acoes da conta como chamados e moderacao de avatar.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Conquistas por usuario</span>
+                    <span class="admin-tab-tag">Acoes da conta</span>
+                    <span class="admin-tab-tag">Chamados</span>
+                </div>
+                <button type="button" id="sendTicketToAllBtn" class="admin-broadcast-ticket-btn">Enviar chamado para todos</button>
+            </div>
+            <div class="admin-section">
+                <h2>Conquistas dos Usuários</h2>
+                <div id="usersContainer" class="loading">Carregando usuários...</div>
+            </div>
+        </div>
+
+        <div id="account-tab" class="tab-content" data-admin-tab-access="account" hidden>
+            <div class="admin-tab-intro">
+                <h2>Conta do usuário</h2>
+                <p>Gerencie o login pelo Google das contas vinculadas. Ao desativá-lo, uma nova senha será enviada ao e-mail verificado para que a pessoa continue acessando o site.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Somente contas Google</span>
+                    <span class="admin-tab-tag">Senha enviada por e-mail</span>
+                    <span class="admin-tab-tag">Recomendar troca da senha</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Habilitar login normal do site</h2>
+                <p style="color:rgba(255,255,255,0.78);font-size:13px;line-height:1.6;">
+                    A senha atual será substituída quando uma nova senha for enviada. O e-mail inclui um botão para solicitar a troca da senha, com verificação pelo próprio e-mail. A senha nunca aparece neste painel.
+                </p>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0;">
+                    <input id="googleLoginAccountSearch" type="search" maxlength="100" placeholder="Buscar por nickname ou e-mail" style="flex:1;min-width:220px;padding:10px;border:1px solid rgba(236,72,153,0.5);border-radius:7px;background:rgba(0,0,0,0.3);color:#fff;">
+                    <button id="searchGoogleLoginAccountsBtn" type="button" class="account-search-button">Buscar contas Google</button>
+                </div>
+                <p id="googleLoginAccountsMessage" role="status" style="min-height:20px;color:rgba(255,255,255,0.78);font-size:13px;"></p>
+                <div id="googleLoginAccountsResults"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Sendmail -->
+        <div id="sendmail-tab" class="tab-content" data-admin-tab-access="sendmail" hidden>
+            <div class="admin-tab-intro">
+                <h2>Sendmail</h2>
+                <p>Use esta área para validar e-mail manualmente e enviar mensagens diretas ou em massa com URL de imagem, GIF ou vídeo.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Verificar e-mail</span>
+                    <span class="admin-tab-tag">Enviar mensagem</span>
+                    <span class="admin-tab-tag">Imagem/GIF/Vídeo</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Pedidos de troca de e-mail</h2>
+                <p style="margin-bottom:14px;color:rgba(255,255,255,0.75);font-size:13px;">Aqui ficam os pedidos pendentes de troca de e-mail enviados pelos usuários. Aprove ou recuse cada solicitação.</p>
+                <div id="emailChangeRequestsContainer" class="loading">Carregando pedidos...</div>
+            </div>
+            <div class="admin-section">
+                <h2>Selecionar Usuário</h2>
+                <p style="margin-bottom:14px;color:rgba(255,255,255,0.75);font-size:13px;">Escolha um usuário para marcar o e-mail como verificado ou inválido, e enviar uma mensagem personalizada.</p>
+                <label style="display:block;margin-bottom:10px;">
+                    <span style="font-size:12px;color:#EC4899;display:block;margin-bottom:6px;">Usuário</span>
+                    <select id="sendmailUserSelect" style="width:100%;padding:10px;border:1px solid rgba(236,72,153,0.4);background:rgba(0,0,0,0.3);color:white;border-radius:6px;">
+                        <option value="">Selecione um usuário...</option>
+                    </select>
+                </label>
+                <div id="sendmailSelectedUserInfo" style="margin-top:14px;padding:14px;border:1px solid rgba(148,163,184,0.25);border-radius:10px;background:rgba(15,23,42,0.65);color:#e2e8f0;font-size:14px;">
+                    Selecione um usuário para ver os detalhes de e-mail aqui.
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:15px;">
+                    <button type="button" id="markEmailVerifiedBtn" style="padding:12px 16px;background:#10B981;color:white;border:none;border-radius:8px;cursor:pointer;">Marcar e-mail verificado</button>
+                    <button type="button" id="markEmailInvalidBtn" style="padding:12px 16px;background:#EF4444;color:white;border:none;border-radius:8px;cursor:pointer;">Marcar e-mail inválido</button>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Enviar E-mail</h2>
+                <p style="margin-bottom:14px;color:rgba(255,255,255,0.75);font-size:13px;">Preencha o assunto e a mensagem. Você pode adicionar uma imagem, GIF ou vídeo usando a URL.</p>
+                <label style="display:block;margin-bottom:10px;">
+                    <span style="font-size:12px;color:#EC4899;display:block;margin-bottom:6px;">Assunto</span>
+                    <input id="sendmailSubject" type="text" placeholder="Assunto do email" style="width:100%;padding:10px;border:1px solid rgba(236,72,153,0.4);background:rgba(0,0,0,0.3);color:white;border-radius:6px;">
+                </label>
+                <label style="display:block;margin-bottom:10px;">
+                    <span style="font-size:12px;color:#EC4899;display:block;margin-bottom:6px;">Mensagem</span>
+                    <div class="rich-editor-toolbar" data-editor-target="sendmailMessage" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+                        <button type="button" data-cmd="bold" class="rich-btn">B</button>
+                        <button type="button" data-cmd="italic" class="rich-btn">I</button>
+                        <button type="button" data-cmd="underline" class="rich-btn">U</button>
+                        <button type="button" data-insert-link="true" class="rich-btn">Link</button>
+                        <button type="button" data-insert-image="true" class="rich-btn" style="background:linear-gradient(135deg, #8B5CF6, #EC4899);">Imagem</button>
+                        <input type="file" id="sendmailImageUploadInput" accept="image/*" style="display:none;">
+                    </div>
+                    <div id="sendmailMessage" contenteditable="true" role="textbox" aria-multiline="true" placeholder="Escreva a mensagem em HTML simples ou texto plano." style="width:100%;padding:10px;border:1px solid rgba(236,72,153,0.4);background:rgba(0,0,0,0.3);color:white;border-radius:6px;min-height:140px;max-height:360px;overflow:auto;resize:vertical;"></div>
+                    <small style="font-size:12px;color:rgba(255,255,255,0.72);display:block;margin-top:6px;">Use a barra acima para formatar texto, inserir links e imagens. O conteúdo será enviado como HTML.</small>
+                </label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <label style="display:block;">
+                        <span style="font-size:12px;color:#EC4899;display:block;margin-bottom:6px;">URL da mídia</span>
+                        <input id="sendmailMediaUrl" type="text" placeholder="https://..." style="width:100%;padding:10px;border:1px solid rgba(236,72,153,0.4);background:rgba(0,0,0,0.3);color:white;border-radius:6px;">
+                    </label>
+                    <label style="display:block;">
+                        <span style="font-size:12px;color:#EC4899;display:block;margin-bottom:6px;">Tipo de mídia</span>
+                        <select id="sendmailMediaType" style="width:100%;padding:10px;border:1px solid rgba(236,72,153,0.4);background:rgba(0,0,0,0.3);color:white;border-radius:6px;">
+                            <option value="">Nenhum</option>
+                            <option value="image">Imagem</option>
+                            <option value="gif">GIF</option>
+                            <option value="video">Vídeo</option>
+                        </select>
+                    </label>
+                </div>
+                <label style="display:block;margin-top:14px;">
+                    <span style="font-size:12px;color:#EC4899;display:block;margin-bottom:6px;">Anexos</span>
+                    <input id="sendmailAttachmentFiles" type="file" multiple accept="image/*,video/*,.pdf,.zip,.rar,.7z,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.json,.txt" style="width:100%;padding:10px;border:1px solid rgba(236,72,153,0.4);background:rgba(0,0,0,0.3);color:white;border-radius:6px;">
+                    <span style="font-size:12px;color:rgba(255,255,255,0.7);display:block;margin-top:6px;">Envie vários arquivos do PC diretamente. Você pode usar anexos e/ou a URL de mídia.</span>
+                </label>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:15px;">
+                    <button type="button" id="sendEmailToUserBtn" style="padding:12px 16px;background:#3B82F6;color:white;border:none;border-radius:8px;cursor:pointer;">Enviar para usuário</button>
+                    <button type="button" id="sendEmailToAllBtn" style="padding:12px 16px;background:#F59E0B;color:white;border:none;border-radius:8px;cursor:pointer;">Enviar para todos</button>
+                </div>
+                <div id="sendmailStatus" style="margin-top:14px;color:#A5B4FC;font-size:13px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Permissoes de Postagem/Downloads -->
+        <div id="staff-hierarchy-tab" class="tab-content" data-admin-tab-access="staffHierarchy" data-hierarchy-view="1" hidden>
+            <div class="admin-tab-intro">
+                <h2>Hierarquia da Staff</h2>
+                <p>Defina quais conquistas funcionam como cargos da staff, a ordem hierarquica e quais abas do painel cada cargo pode acessar. Cargos com acesso ao painel recebem Conquistas, Permissões, Moderação e Postagens Suspensas por padrão; as outras abas podem ser ativadas individualmente.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Staff</span>
+                    <span class="admin-tab-tag">Niveis</span>
+                    <span class="admin-tab-tag">Controle</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Cargos e Niveis</h2>
+                <div id="staffHierarchyContainer" class="loading">Carregando hierarquia da staff...</div>
+            </div>
+            <details class="admin-section admin-tab-access-details" data-owner-only="1">
+                <summary>Permissões individuais das abas</summary>
+                <p style="color:rgba(255,255,255,0.78);font-size:13px;line-height:1.6;">
+                    As abas liberadas pelo cargo aparecem marcadas como “pelo cargo”. As demais podem ser liberadas individualmente para este usuário.
+                </p>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0;">
+                    <input id="adminTabAccessSearch" type="search" maxlength="100" placeholder="Buscar por nickname ou e-mail" style="flex:1;min-width:220px;padding:10px;border:1px solid rgba(236,72,153,0.5);border-radius:7px;background:rgba(0,0,0,0.3);color:#fff;">
+                    <button id="searchAdminTabAccessUsersBtn" type="button" class="account-search-button">Buscar usuários</button>
+                </div>
+                <p id="adminTabAccessMessage" role="status" style="min-height:20px;color:rgba(255,255,255,0.78);font-size:13px;"></p>
+                <div id="adminTabAccessResults"></div>
+            </details>
+        </div>
+
+        <div id="post-permissions-tab" class="tab-content" data-admin-tab-access="postPermissions" hidden>
+            <div class="admin-tab-intro">
+                <h2>Permissoes Diretas e Downloads</h2>
+                <p>Esta area concentra acessos que nao dependem de conquista. Ideal para liberar funcoes especificas e revisar quem pode postar, editar ou acessar o painel.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Permissoes individuais</span>
+                    <span class="admin-tab-tag">Downloads</span>
+                    <span class="admin-tab-tag">Acesso ao painel</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Conceder Permissoes Individuais</h2>
+                <form class="form-group" id="grantPermissionForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/E-mail do Usuário *</label>
+                        <input type="text" placeholder="Digite o nickname ou e-mail" required id="userForPermission" style="width: 100%; box-sizing: border-box;">
+                        <small style="color: rgba(255, 255, 255, 0.5); display: block; margin-top: 5px;">Defina aqui permissões diretas (sem depender de conquista).</small>
+                    </div>
+                    <div style="width: 100%; margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; color: #F9A8D4; font-weight: 600;"><input type="checkbox" id="permCanPostDownloads" style="width: 16px; height: 16px;"><span>Postar Downloads</span></label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: #F472B6; font-weight: 600;"><input type="checkbox" id="permCanManageDownloads" style="width: 16px; height: 16px;"><span>Administração de Downloads</span></label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: #FBBF24; font-weight: 600;"><input type="checkbox" id="permCanOrderFixedRanks" style="width: 16px; height: 16px;"><span>Ordenar conquistas fixas</span></label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: #34D399; font-weight: 600;"><input type="checkbox" id="permCanAccessAdminPanel" style="width: 16px; height: 16px;"><span>Acesso ao Painel Admin</span></label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: #38BDF8; font-weight: 600;"><input type="checkbox" id="permCanUseAnimatedProfile" style="width: 16px; height: 16px;"><span>Card de Perfil Animado</span></label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: #F472B6; font-weight: 600;"><input type="checkbox" id="permCanChangeRankColor" style="width: 16px; height: 16px;"><span>Alterar Cor da Conquista</span></label>
+                    </div>
+                    <small style="color: rgba(255, 255, 255, 0.58); display: block; margin-top: 10px;">Sem "Administração de Downloads", o usuário só pode editar ou excluir as próprias postagens.</small>
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Salvar Permissões</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>Usuários com Permissões Individuais</h2>
+                <table class="users-table" id="postPermissionsTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Nickname</th>
+                            <th>Email</th>
+                            <th>Postagens</th>
+                            <th>Permissões</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="postPermissionsTableBody"></tbody>
+                </table>
+                <div id="postPermissionsContainer" class="loading">Carregando usuários com permissões individuais...</div>
+            </div>
+
+            <div class="admin-section">
+                <h2>Conquistas de Postagens (Progressão)</h2>
+                <div id="postageRanksContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Navbar -->
+        <div id="navbar-tab" class="tab-content" data-admin-tab-access="navbar" hidden>
+            <div class="admin-tab-intro">
+                <h2>Navbar</h2>
+                <p>Gerencie os links da comunidade e as descrições exibidas nos botões da barra de navegação.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">WhatsApp</span>
+                    <span class="admin-tab-tag">Discord</span>
+                    <span class="admin-tab-tag">Tooltips</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Configurações da Navbar</h2>
+                <form class="form-group" id="socialLinksForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">URL do WhatsApp *</label>
+                            <input type="text" placeholder="https://chat.whatsapp.com/..." required id="adminWhatsappUrl" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descrição do botão WhatsApp *</label>
+                            <input type="text" placeholder="Ex: WhatsApp" required id="adminWhatsappTooltip" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">URL do Discord *</label>
+                            <input type="text" placeholder="https://discord.gg/..." required id="adminDiscordUrl" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descrição do botão Discord *</label>
+                            <input type="text" placeholder="Ex: Discord" required id="adminDiscordTooltip" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; color: #10B981; font-weight: 600;"><input type="checkbox" id="adminWhatsappEnabled" checked style="width: 16px; height: 16px;"><span>Habilitar botão WhatsApp</span></label>
+                        <label style="display: flex; align-items: center; gap: 8px; color: #3B82F6; font-weight: 600;"><input type="checkbox" id="adminDiscordEnabled" checked style="width: 16px; height: 16px;"><span>Habilitar botão Discord</span></label>
+                    </div>
+                    <div id="navbarButtonsManager" style="width: 100%; margin-top: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                            <div>
+                                <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Botões extras do Navbar</label>
+                                <p style="margin: 0; color: #AAA; font-size: 12px;">Adicione botões adicionais que aparecem na barra de navegação.</p>
+                            </div>
+                            <button type="button" id="addNavbarButtonBtn" style="border: 0; border-radius: 10px; background: #7C3AED; color: #fff; padding: 10px 14px; cursor: pointer;">Adicionar botão</button>
+                        </div>
+                        <div id="navbarButtonsList" style="display: grid; gap: 10px; margin-top: 12px;"></div>
+                    </div>
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Salvar Navbar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB: Banimentos -->
+        <div id="bans-tab" class="tab-content" data-admin-tab-access="bans" hidden>
+            <div class="admin-tab-intro">
+                <h2>Moderacao da Guilda</h2>
+                <p>Banimentos e suspensoes ficam isolados aqui para evitar confusao com permissoes comuns. Esta e a area certa para acoes disciplinares e consulta do historico.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Suspensao</span>
+                    <span class="admin-tab-tag">Ban permanente</span>
+                    <span class="admin-tab-tag">Historico</span>
+                </div>
+            </div>
+            <div class="admin-section">
+                <h2>Banir ou Suspender Usuário</h2>
+                <form class="form-group" id="banForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/E-mail do Usuário *</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" placeholder="Digite o nickname ou e-mail" required id="userToBan" style="flex: 1; box-sizing: border-box;">
+                                <button type="button" id="checkBanBtn" style="padding: 8px 10px; background: #1f2937; color: #fff; border-radius: 8px; border: none; cursor: pointer;">Checar ban</button>
+                                <button type="button" id="inlineUnbanBtn" style="padding: 8px 10px; background: #059669; color: #fff; border-radius: 8px; border: none; cursor: pointer; display: none;">Desbanir</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Tipo *</label>
+                            <select id="banType" style="width: 100%; box-sizing: border-box;">
+                                <option value="suspension">Suspensão Temporária</option>
+                                <option value="permanent">Ban Permanente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div id="daysDiv" style="display: block;">
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Dias de Suspensão *</label>
+                            <input type="number" placeholder="Ex: 7, 30, 365" required id="banDays" min="1" class="ban-days-input" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Motivo *</label>
+                            <input type="text" placeholder="Ex: Comportamento abusivo" required id="banReason" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <button type="submit" style="margin-top: 15px; width: 100%; background: #FF0000;">Banir/Suspender</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>Usuários Banidos/Suspensos</h2>
+                <div id="bansListContainer" class="loading">Carregando lista de banimentos...</div>
+            </div>
+        </div>
+
+        <!-- TAB: Postagens Suspensas -->
+        <div id="suspended-posts-tab" class="tab-content" data-admin-tab-access="suspendedPosts" hidden>
+            <div class="admin-tab-intro">
+                <h2>Postagens Suspensas</h2>
+                <p>Gerencie postagens suspensas enviadas pelos usuários. Você pode revisar, desuspender para que o usuário faça alterações, ou remover permanentemente.</p>
+                <div class="admin-tab-tags">
+                    <span class="admin-tab-tag">Revisar postagens</span>
+                    <span class="admin-tab-tag">Desuspender para edição</span>
+                    <span class="admin-tab-tag">Remover permanentemente</span>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2>Postagens Suspensas Pendentes</h2>
+                <div id="suspendedPostsContainer" class="loading">Carregando postagens suspensas...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="site-config.js"></script>
+    <script src="auth-api.js?v=20261115-admin-tab-access-3"></script>
+    <script src="auth-manager.js"></script>
+    <script src="admin.js?v=20261115-suspended-post-actions-1"></script>
+</body>
+</html>

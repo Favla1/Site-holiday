@@ -1,0 +1,121 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membros - HOLIDAY Guild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-premium.css?v=20260315-5">
+    <link rel="stylesheet" href="members.css?v=20260314-9">
+</head>
+<body>
+    <div class="animated-background">
+        <div class="smoke-particle smoke-particle-1"></div>
+        <div class="smoke-particle smoke-particle-2"></div>
+        <div class="smoke-particle smoke-particle-3"></div>
+        <div class="smoke-particle smoke-particle-4"></div>
+        <div class="smoke-particle smoke-particle-5"></div>
+
+        <div class="light-flicker light-1"></div>
+        <div class="light-flicker light-2"></div>
+        <div class="light-flicker light-3"></div>
+
+        <div class="cloud cloud-bg-1"></div>
+        <div class="cloud cloud-bg-2"></div>
+        <div class="cloud cloud-bg-3"></div>
+        <div class="star star-bg-1"></div>
+        <div class="star star-bg-2"></div>
+        <div class="star star-bg-3"></div>
+        <div class="star star-bg-4"></div>
+        <div class="star star-bg-5"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>GUILD HOLIDAY</h1>
+                <p>Membros</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">In&iacute;cio</a>
+                <a href="dicas.html" class="nav-link">Comandos & Dicas</a>
+                <a href="lag.html" class="nav-link">Customiza&ccedil;&atilde;o</a>
+                <a href="downloads.html" class="nav-link">Downloads</a>
+                <a href="members.html" class="nav-link active" style="display: none;">Membros</a>
+                <a href="profile.html" class="nav-link" style="display: none;">Perfil</a>
+            </div>
+            <div class="navbar-buttons">
+                <a href="https://chat.whatsapp.com/EDqaY8udJmFCTVCTex3b5p" class="btn-navbar btn-whatsapp icon-btn tooltip-theme" target="_blank" aria-label="WhatsApp" data-tooltip="WhatsApp">
+                    <img src="/imagens/wp.png" alt="WhatsApp" class="navbar-icon" width="16" height="16">
+                </a>
+                <a href="https://discord.gg/KEc4ZdR3" class="btn-navbar btn-discord icon-btn tooltip-theme" target="_blank" aria-label="Discord" data-tooltip="Discord">
+                    <img src="/imagens/Discord.png" alt="Discord" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="notificationBell" class="btn-navbar btn-notifications icon-btn tooltip-theme" style="position: relative; display: none;" aria-label="Notifica&ccedil;&otilde;es" data-tooltip="Notifica&ccedil;&otilde;es">
+                    <img src="/imagens/Sino.png" alt="Notifica&ccedil;&otilde;es" class="navbar-icon" width="16" height="16">
+                    <span id="notificationBadge" class="notification-badge" style="display: none;"></span>
+                </button>
+                <a href="login.html" class="btn-navbar btn-login icon-btn tooltip-theme" aria-label="Login" data-tooltip="Login">
+                    <img src="/imagens/login.png" alt="Login" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="profileCardBtn" class="btn-navbar icon-btn tooltip-theme" style="display: none; position: relative;" aria-label="Perfil" data-tooltip="Perfil">
+                    <img id="profileCardAvatar" src="/imagens/logo.png" alt="Perfil" class="navbar-icon" width="20" height="20" style="border-radius: 50%; border: 2px solid #EC4899;">
+                </button>
+                <button id="logoutBtn" class="btn-navbar btn-logout icon-btn tooltip-theme" style="display: none;" aria-label="Sair" data-tooltip="Sair">
+                    <img src="/imagens/Sair.png" alt="Sair" class="navbar-icon" width="16" height="16">
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="content-section">
+            <div class="members-toolbar">
+                <div class="members-search">
+                    <label for="membersSearch">Buscar membro</label>
+                    <input id="membersSearch" type="text" placeholder="Digite nome ou nickname">
+                </div>
+                <div class="members-sort">
+                    <label for="membersSort">Ordenar</label>
+                    <select id="membersSort">
+                        <option value="recent">Mais recentes</option>
+                        <option value="posts">Postagens</option>
+                        <option value="likes">Likes recebidos</option>
+                        <option value="favorites">Favoritos recebidos</option>
+                        <option value="hearts">Corações recebidos</option>
+                        <option value="name">Nome (A-Z)</option>
+                    </select>
+                </div>
+                <div class="members-summary" id="membersSummary">
+                    0 membros
+                </div>
+            </div>
+
+            <div id="membersLoading" class="members-loading">Carregando membros...</div>
+            <div id="membersEmpty" class="members-empty" style="display: none;">Nenhum membro encontrado.</div>
+            <div id="membersList" class="members-list"></div>
+            <button id="membersLoadMore" class="members-load-more" style="display: none;">Carregar mais</button>
+        </section>
+    </main>
+
+    <div id="notificationToast"></div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 HOLIDAY Guild. Todos os direitos reservados.</p>
+            <p>Grupo Guild Holiday criado em 2014</p>
+        </div>
+    </footer>
+
+    <script src="site-config.js"></script>
+    <script src="auth-api.js"></script>
+    <script src="auth-manager.js"></script>
+    <script src="navigation.js?v=20261114-navbar-icons-1"></script>
+    <script src="members.js?v=20261114-profile-links-ranks-2"></script>
+</body>
+</html>
