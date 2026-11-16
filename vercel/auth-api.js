@@ -1,4 +1,4 @@
-﻿// API Configuration
+// API Configuration
 function normalizeApiBase(rawUrl) {
     const sanitized = String(rawUrl || '').trim().replace(/\/+$/, '');
     if (!sanitized) return '';
@@ -1889,10 +1889,26 @@ class AuthAPI {
                 body: form
             });
 
-            return await response.json();
+            const responseText = await response.text();
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch {
+                const detail = responseText.replace(/\s+/g, ' ').trim().slice(0, 180);
+                throw new Error(
+                    detail
+                        ? `O servidor recusou o upload (HTTP ${response.status}): ${detail}`
+                        : `O servidor recusou o upload (HTTP ${response.status}).`
+                );
+            }
+
+            if (!response.ok && !result?.message) {
+                result.message = `Falha no upload (HTTP ${response.status}).`;
+            }
+            return result;
         } catch (error) {
             console.error('Erro ao enviar arquivo do download:', error);
-            return { success: false, message: 'Erro de conexeo' };
+            return { success: false, message: error?.message || 'Erro de conexão durante o upload.' };
         }
     }
 
