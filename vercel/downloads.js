@@ -1,4 +1,4 @@
-﻿let currentUser = null;
+let currentUser = null;
 let allDownloads = [];
 let userCanPost = false;
 let userCanManageDownloads = false;
@@ -31,7 +31,7 @@ const MAX_DOWNLOAD_LINKS = 3;
 const MAX_DOWNLOAD_FILE_BYTES = 500 * 1024 * 1024;
 const PROFILE_TAGLINE_MAX_LENGTH = 100;
 const DOWNLOAD_FILE_ACCEPT = [
-    '.apk', '.exe', '.msi', '.zip', '.rar', '.7z',
+    '.apk', '.exe', '.msi', '.zip', '.rar', '.7z', '.war',
     '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt',
     '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg',
     '.mp3', '.mp4', '.iso',
@@ -88,6 +88,7 @@ const DOWNLOAD_LINK_EXTENSION_FORMAT_MAP = {
     zip: 'zip',
     rar: 'rar',
     '7z': '7z',
+    war: 'software',
     pdf: 'pdf',
     doc: 'doc',
     docx: 'doc',
