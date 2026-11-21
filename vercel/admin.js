@@ -1256,6 +1256,32 @@ function attachEventListeners() {
     }
 
     // Gerenciar permissões de postagem
+    const globalDownloadUploadsEnabled = document.getElementById('globalDownloadUploadsEnabled');
+    const saveGlobalDownloadUploadsEnabled = document.getElementById('saveGlobalDownloadUploadsEnabled');
+    if (globalDownloadUploadsEnabled) {
+        AuthAPI.getDownloadUploadSettings().then((settings) => {
+            if (settings.success) {
+                globalDownloadUploadsEnabled.checked = settings.enabled === true;
+            }
+        }).catch((error) => {
+            console.error('[ADMIN] Erro ao carregar configuração global de arquivos:', error);
+        });
+    }
+    if (saveGlobalDownloadUploadsEnabled) {
+        saveGlobalDownloadUploadsEnabled.addEventListener('click', async () => {
+            saveGlobalDownloadUploadsEnabled.disabled = true;
+            try {
+                const settings = await AuthAPI.updateDownloadUploadSettings(globalDownloadUploadsEnabled?.checked === true);
+                showMessage(
+                    settings.success ? settings.message : (settings.message || 'Não foi possível salvar a configuração global.'),
+                    settings.success ? 'success' : 'error'
+                );
+            } finally {
+                saveGlobalDownloadUploadsEnabled.disabled = false;
+            }
+        });
+    }
+
     const grantPermissionForm = document.getElementById('grantPermissionForm');
     if (grantPermissionForm) {
         grantPermissionForm.addEventListener('submit', async (e) => {
