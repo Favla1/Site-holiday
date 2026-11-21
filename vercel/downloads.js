@@ -3,6 +3,7 @@ let allDownloads = [];
 let userCanPost = false;
 let userCanManageDownloads = false;
 let userCanSuspendPosts = false;
+let globalDownloadUploadsEnabled = false;
 let showingFavoritesOnly = false;
 let filteredDownloadsCache = [];
 let currentDownloadsPage = 1;
@@ -1370,7 +1371,7 @@ function syncPostLinkRowMode(row) {
     if (!row) return;
     const useLinkToggle = row.querySelector('.downloadUseLink');
     const useFileToggle = row.querySelector('.downloadUseFile');
-    if (!Boolean(currentUser?.canUploadDownloads) && useFileToggle) {
+    if (!Boolean(globalDownloadUploadsEnabled) && useFileToggle) {
         useFileToggle.checked = false;
         useFileToggle.disabled = true;
     }
@@ -1523,7 +1524,7 @@ function syncPostButtonAvailability() {
 }
 
 function syncDownloadUploadPermissionUi() {
-    const canUpload = Boolean(currentUser?.canUploadDownloads);
+    const canUpload = Boolean(globalDownloadUploadsEnabled);
 
     document.querySelectorAll('.downloadUseFile, .editDownloadUseFile').forEach((checkbox) => {
         if (!canUpload) {
@@ -1532,7 +1533,7 @@ function syncDownloadUploadPermissionUi() {
             const label = checkbox.closest('label');
             if (label) {
                 label.style.opacity = '0.55';
-                label.title = 'Envio de arquivos desativado.';
+                label.title = 'Essa opção está indisponivel no momento';
             }
         } else {
             checkbox.disabled = false;
@@ -1546,6 +1547,18 @@ function syncDownloadUploadPermissionUi() {
 
     document.querySelectorAll('.download-file-picker, .edit-download-file-picker').forEach((picker) => {
         if (!canUpload) picker.hidden = true;
+    });
+
+    document.querySelectorAll('.download-upload-row').forEach((row) => {
+        const hint = row.querySelector('small');
+        if (!hint) return;
+        if (!canUpload) {
+            hint.textContent = 'Essa opção está indisponivel no momento';
+            hint.style.cssText = 'display:block;width:100%;margin-top:8px;padding:8px 10px;border:1px solid rgba(236,72,153,.55);border-radius:8px;background:rgba(236,72,153,.12);color:#F9A8D4;font-weight:700;';
+        } else {
+            hint.textContent = 'Arquivo até 500MB';
+            hint.style.cssText = 'color:rgba(255,255,255,.65);font-weight:600;';
+        }
     });
 }
 
@@ -1696,6 +1709,17 @@ function setupFormatHelpTooltip() {
 }
 
 // Carregar usuário autenticado ao abrir página
+async function loadGlobalDownloadUploadsSetting() {
+    try {
+        const response = await AuthAPI.getDownloadUploadSettings();
+        globalDownloadUploadsEnabled = response?.success === true && response.enabled === true;
+        syncDownloadUploadPermissionUi();
+    } catch {
+        globalDownloadUploadsEnabled = false;
+        syncDownloadUploadPermissionUi();
+    }
+}
+
 async function loadCurrentUser() {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -4082,11 +4106,11 @@ function showEditDownloadForm(download) {
                     }
 
                     const file = entry.file;
-                    if (!Boolean(currentUser?.canUploadDownloads)) {
-                        throw new Error('Envio de arquivos está desativado para sua conta.');
+                    if (!Boolean(globalDownloadUploadsEnabled)) {
+                        throw new Error('Essa opção está indisponivel no momento');
                     }
-                    if (!Boolean(currentUser?.canUploadDownloads)) {
-                        throw new Error('Envio de arquivos está desativado para sua conta.');
+                    if (!Boolean(globalDownloadUploadsEnabled)) {
+                        throw new Error('Essa opção está indisponivel no momento');
                     }
                     if (Number(file?.size || 0) > MAX_DOWNLOAD_FILE_BYTES) {
                         throw new Error('Arquivo muito grande. Limite de 500MB para uploads de download.');
@@ -4762,6 +4786,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupPostAdvancedOptionsToggle();
     syncAdultPostOptionVisibility();
     await loadCurrentUser();
+    await loadGlobalDownloadUploadsSetting();
     syncFavoritesToggleButton();
     syncPostButtonAvailability();
     await loadDownloads();
@@ -5274,91 +5299,3 @@ function openAvatarZoomViewer(avatarUrl, nickname = 'Usuário', initialScale = 1
     const slider = modal.querySelector('#zoomSlider');
     const percentDisplay = modal.querySelector('#zoomPercent');
     const resetBtn = modal.querySelector('#resetBtn');
-    const closeBtn = modal.querySelector('#closeZoom');
-
-    // Estado com os valores iniciais passados
-    let currentScale = Number(initialScale) || 1;
-    let offsetX = Number(initialOffsetX) || 50;
-    let offsetY = Number(initialOffsetY) || 50;
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragStartY = 0;
-
-    // Funções
-    const updateTransform = () => {
-        img.style.left = `${offsetX}%`;
-        img.style.top = `${offsetY}%`;
-        img.style.transform = `translate(-50%, -50%) scale(${currentScale})`;
-    };
-
-    const updatePercent = () => {
-        percentDisplay.textContent = `${Math.round(currentScale * 100)}%`;
-    };
-
-    // Carregar imagem
-    img.src = escapeHtml(avatarUrl);
-
-    // Aplicar transformações iniciais ao carregar
-    img.onload = () => {
-        updateTransform();
-    };
-
-    // Events
-    slider.addEventListener('input', (e) => {
-        currentScale = parseFloat(e.target.value);
-        updateTransform();
-        updatePercent();
-    });
-
-    img.addEventListener('mousedown', (e) => {
-        if (currentScale <= 1) return;
-        isDragging = true;
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        img.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const deltaX = e.clientX - dragStartX;
-        const deltaY = e.clientY - dragStartY;
-        offsetX += (deltaX / 150);
-        offsetY += (deltaY / 150);
-        offsetX = Math.max(0, Math.min(100, offsetX));
-        offsetY = Math.max(0, Math.min(100, offsetY));
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        updateTransform();
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        img.style.cursor = 'grab';
-    });
-
-    resetBtn.addEventListener('click', () => {
-        currentScale = 1;
-        offsetX = 50;
-        offsetY = 50;
-        slider.value = '1';
-        updateTransform();
-        updatePercent();
-    });
-
-    const closeModal = () => {
-        overlay.remove();
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeModal();
-    });
-
-    // Aplicar valores iniciais
-    slider.value = String(currentScale);
-    updatePercent();
-    updateTransform();
-}
-
-
-
