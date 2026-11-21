@@ -1,4 +1,4 @@
-﻿// Script para Painel Admin - Nova Versão com conquistas Customizáveis
+// Script para Painel Admin - Nova Versão com conquistas Customizáveis
 
 const MAX_ACHIEVEMENT_BG_FILE_BYTES = 20 * 1024 * 1024;
 const MAX_RANK_BACKGROUND_FILE_BYTES = 500 * 1024 * 1024;
@@ -1282,6 +1282,7 @@ function attachEventListeners() {
                 prefillPermissionsForm(
                     username,
                     datasetBooleanFlag(editBtn.dataset.canPostDownloads),
+                    datasetBooleanFlag(editBtn.dataset.canUploadDownloads),
                     datasetBooleanFlag(editBtn.dataset.canManageDownloads),
                     datasetBooleanFlag(editBtn.dataset.canOrderFixedRanks),
                     datasetBooleanFlag(editBtn.dataset.canAccessAdminPanel),
@@ -1313,6 +1314,7 @@ function attachEventListeners() {
                 prefillPermissionsForm(
                     username,
                     parsed.canPostDownloads,
+                    parsed.canUploadDownloads,
                     parsed.canManageDownloads,
                     parsed.canOrderFixedRanks,
                     parsed.canAccessAdminPanel,
@@ -6605,6 +6607,7 @@ async function loadPostPermissions() {
                     <td>
                         <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                             ${user.canPostDownloads ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(244,114,182,0.2); border: 1px solid rgba(244,114,182,0.45); color: #F9A8D4; font-size: 11px;">Postar</span>' : ''}
+                            ${user.canUploadDownloads ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(167,139,250,0.2); border: 1px solid rgba(167,139,250,0.45); color: #C4B5FD; font-size: 11px;">Enviar Arquivos</span>' : ''}
                             ${user.canManageDownloads ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.45); color: #F472B6; font-size: 11px;">Administração de Downloads</span>' : ''}
                             ${user.canOrderFixedRanks ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.45); color: #FBBF24; font-size: 11px;">Ordenar Fixos</span>' : ''}
                             ${user.canAccessAdminPanel ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.45); color: #34D399; font-size: 11px;">Painel Admin</span>' : ''}
@@ -6619,6 +6622,7 @@ async function loadPostPermissions() {
                                 class="edit-individual-permission-btn"
                                 data-username="${escapeHtmlAdmin(user.nickname)}"
                                 data-can-post-downloads="${Number(user.canPostDownloads) === 1 ? '1' : '0'}"
+                                data-can-upload-downloads="${Number(user.canUploadDownloads) === 1 ? '1' : '0'}"
                                 data-can-manage-downloads="${Number(user.canManageDownloads) === 1 ? '1' : '0'}"
                                 data-can-order-fixed-ranks="${Number(user.canOrderFixedRanks) === 1 ? '1' : '0'}"
                                 data-can-access-admin-panel="${Number(user.canAccessAdminPanel) === 1 ? '1' : '0'}"
@@ -6644,6 +6648,7 @@ async function loadPostPermissions() {
                     prefillPermissionsForm(
                         username,
                         datasetBooleanFlag(btn.dataset.canPostDownloads),
+                        datasetBooleanFlag(btn.dataset.canUploadDownloads),
                         datasetBooleanFlag(btn.dataset.canManageDownloads),
                         datasetBooleanFlag(btn.dataset.canOrderFixedRanks),
                         datasetBooleanFlag(btn.dataset.canAccessAdminPanel),
@@ -6686,6 +6691,7 @@ function parsePermissionFlagsFromTableRow(row) {
     const hasToken = (needle) => tokens.some((token) => token.includes(needle));
     return {
         canPostDownloads: hasToken('postar'),
+        canUploadDownloads: hasToken('enviar arquivos'),
         canManageDownloads: hasToken('gerenciar downloads') || hasToken('administracao de downloads') || hasToken('administração de downloads'),
         canOrderFixedRanks: hasToken('ordenar fixos'),
         canAccessAdminPanel: hasToken('painel admin'),
@@ -6728,6 +6734,7 @@ async function loadPostageRanks() {
 function getPermissionsFromForm() {
     return {
         canPostDownloads: Boolean(document.getElementById('permCanPostDownloads')?.checked),
+        canUploadDownloads: Boolean(document.getElementById('permCanUploadDownloads')?.checked),
         canManageDownloads: Boolean(document.getElementById('permCanManageDownloads')?.checked),
         canOrderFixedRanks: Boolean(document.getElementById('permCanOrderFixedRanks')?.checked),
         canAccessAdminPanel: Boolean(document.getElementById('permCanAccessAdminPanel')?.checked),
@@ -6739,6 +6746,9 @@ function getPermissionsFromForm() {
 function applyPermissionsToForm(permissions = {}) {
     if (document.getElementById('permCanPostDownloads')) {
         document.getElementById('permCanPostDownloads').checked = Boolean(permissions.canPostDownloads);
+    }
+    if (document.getElementById('permCanUploadDownloads')) {
+        document.getElementById('permCanUploadDownloads').checked = Boolean(permissions.canUploadDownloads);
     }
     if (document.getElementById('permCanManageDownloads')) {
         document.getElementById('permCanManageDownloads').checked = Boolean(permissions.canManageDownloads);
@@ -6757,11 +6767,12 @@ function applyPermissionsToForm(permissions = {}) {
     }
 }
 
-function prefillPermissionsForm(username, canPostDownloads, canManageDownloads, canOrderFixedRanks, canAccessAdminPanel, canUseAnimatedProfile, canChangeRankColor) {
+function prefillPermissionsForm(username, canPostDownloads, canUploadDownloads, canManageDownloads, canOrderFixedRanks, canAccessAdminPanel, canUseAnimatedProfile, canChangeRankColor) {
     const userInput = document.getElementById('userForPermission');
     if (userInput) userInput.value = username;
     applyPermissionsToForm({
         canPostDownloads,
+        canUploadDownloads,
         canManageDownloads,
         canOrderFixedRanks,
         canAccessAdminPanel,
@@ -6789,6 +6800,7 @@ async function saveIndividualPermissions(username) {
             document.getElementById('userForPermission').value = '';
             applyPermissionsToForm({
                 canPostDownloads: false,
+                canUploadDownloads: false,
                 canManageDownloads: false,
                 canOrderFixedRanks: false,
                 canAccessAdminPanel: false,
@@ -6821,6 +6833,7 @@ async function clearIndividualPermissions(username) {
     try {
         const result = await AuthAPI.setUserPermissions(username, {
             canPostDownloads: false,
+            canUploadDownloads: false,
             canManageDownloads: false,
             canOrderFixedRanks: false,
             canAccessAdminPanel: false,
