@@ -2618,6 +2618,14 @@
             </div>
             <div class="admin-section">
                 <h2>Conceder Permissoes Individuais</h2>
+                <div style="width: 100%; margin-bottom: 18px; padding: 14px; border: 1px solid rgba(167,139,250,.45); border-radius: 8px; background: rgba(167,139,250,.08);">
+                    <label style="display: flex; align-items: center; gap: 9px; color: #C4B5FD; font-weight: 700;">
+                        <input type="checkbox" id="globalDownloadUploadsEnabled" style="width: 18px; height: 18px;">
+                        <span>Ativar Enviar arquivo para todos os usuarios</span>
+                    </label>
+                    <small style="display: block; margin-top: 8px; color: rgba(255,255,255,.58);">Ative esta opcao para liberar ou desativar o envio de arquivos no site inteiro.</small>
+                    <button type="button" id="saveGlobalDownloadUploadsEnabled" style="margin-top: 12px; padding: 9px 14px; background: #7C3AED; border: none; border-radius: 6px; color: white; font-weight: 700; cursor: pointer;">Salvar opcao global</button>
+                </div>
                 <form class="form-group" id="grantPermissionForm" style="flex-direction: column; align-items: flex-start;">
                     <div style="width: 100%;">
                         <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/E-mail do Usuário *</label>
@@ -2626,7 +2634,6 @@
                     </div>
                     <div style="width: 100%; margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <label style="display: flex; align-items: center; gap: 8px; color: #F9A8D4; font-weight: 600;"><input type="checkbox" id="permCanPostDownloads" style="width: 16px; height: 16px;"><span>Postar Downloads</span></label>
-                        <label style="display: flex; align-items: center; gap: 8px; color: #A78BFA; font-weight: 600;"><input type="checkbox" id="permCanUploadDownloads" style="width: 16px; height: 16px;"><span>Enviar Arquivos</span></label>
                         <label style="display: flex; align-items: center; gap: 8px; color: #F472B6; font-weight: 600;"><input type="checkbox" id="permCanManageDownloads" style="width: 16px; height: 16px;"><span>Administração de Downloads</span></label>
                         <label style="display: flex; align-items: center; gap: 8px; color: #FBBF24; font-weight: 600;"><input type="checkbox" id="permCanOrderFixedRanks" style="width: 16px; height: 16px;"><span>Ordenar conquistas fixas</span></label>
                         <label style="display: flex; align-items: center; gap: 8px; color: #34D399; font-weight: 600;"><input type="checkbox" id="permCanAccessAdminPanel" style="width: 16px; height: 16px;"><span>Acesso ao Painel Admin</span></label>
@@ -2784,11 +2791,3 @@
                 <div id="suspendedPostsContainer" class="loading">Carregando postagens suspensas...</div>
             </div>
         </div>
-    </div>
-
-    <script src="site-config.js"></script>
-    <script src="auth-api.js?v=20261120-upload-permission-1"></script>
-    <script src="auth-manager.js"></script>
-    <script src="admin.js?v=20261120-upload-permission-1"></script>
-</body>
-</html>
