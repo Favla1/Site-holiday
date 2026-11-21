@@ -1,4 +1,4 @@
-﻿let currentUser = null;
+let currentUser = null;
 let allDownloads = [];
 let userCanPost = false;
 let userCanManageDownloads = false;
@@ -31,7 +31,7 @@ const MAX_DOWNLOAD_LINKS = 3;
 const MAX_DOWNLOAD_FILE_BYTES = 500 * 1024 * 1024;
 const PROFILE_TAGLINE_MAX_LENGTH = 100;
 const DOWNLOAD_FILE_ACCEPT = [
-    '.apk', '.exe', '.msi', '.zip', '.rar', '.7z',
+    '.apk', '.exe', '.msi', '.zip', '.rar', '.7z', '.war',
     '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt',
     '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg',
     '.mp3', '.mp4', '.iso',
@@ -88,6 +88,7 @@ const DOWNLOAD_LINK_EXTENSION_FORMAT_MAP = {
     zip: 'zip',
     rar: 'rar',
     '7z': '7z',
+    war: 'software',
     pdf: 'pdf',
     doc: 'doc',
     docx: 'doc',
@@ -1203,9 +1204,23 @@ function isDownloadFileUrl(rawUrl) {
 
     try {
         const parsed = new URL(raw, window.location.origin);
-        return String(parsed.pathname || '').startsWith('/uploads/download-files/');
+        const pathname = String(parsed.pathname || '').toLowerCase();
+        return pathname.startsWith('/uploads/download-files/')
+            || pathname.startsWith('/api/downloads/file/');
     } catch {
-        return raw.startsWith('/uploads/download-files/');
+        const normalized = raw.toLowerCase();
+        return normalized.startsWith('/uploads/download-files/')
+            || normalized.startsWith('/api/downloads/file/');
+    }
+}
+
+async function cleanupUnattachedR2Uploads(uploadIds) {
+    const uniqueUploadIds = [...new Set((Array.isArray(uploadIds) ? uploadIds : []).filter(Boolean))];
+    for (const uploadId of uniqueUploadIds) {
+        const result = await AuthAPI.abortDownloadFile(uploadId);
+        if (!result?.success) {
+            console.error(`Não foi possível remover o upload temporário ${uploadId}:`, result?.message);
+        }
     }
 }
 
@@ -1355,6 +1370,10 @@ function syncPostLinkRowMode(row) {
     if (!row) return;
     const useLinkToggle = row.querySelector('.downloadUseLink');
     const useFileToggle = row.querySelector('.downloadUseFile');
+    if (!Boolean(currentUser?.canUploadDownloads) && useFileToggle) {
+        useFileToggle.checked = false;
+        useFileToggle.disabled = true;
+    }
     const useLink = useLinkToggle?.checked === true;
     const useFile = useFileToggle?.checked === true;
     const urlInput = row.querySelector('.downloadLink');
@@ -1499,6 +1518,35 @@ function syncPostButtonAvailability() {
         postButton.textContent = 'Postar Download';
         if (blockedReasonBox) blockedReasonBox.style.display = 'none';
     }
+
+    syncDownloadUploadPermissionUi();
+}
+
+function syncDownloadUploadPermissionUi() {
+    const canUpload = Boolean(currentUser?.canUploadDownloads);
+
+    document.querySelectorAll('.downloadUseFile, .editDownloadUseFile').forEach((checkbox) => {
+        if (!canUpload) {
+            checkbox.checked = false;
+            checkbox.disabled = true;
+            const label = checkbox.closest('label');
+            if (label) {
+                label.style.opacity = '0.55';
+                label.title = 'Envio de arquivos desativado.';
+            }
+        } else {
+            checkbox.disabled = false;
+            const label = checkbox.closest('label');
+            if (label) {
+                label.style.opacity = '';
+                label.title = '';
+            }
+        }
+    });
+
+    document.querySelectorAll('.download-file-picker, .edit-download-file-picker').forEach((picker) => {
+        if (!canUpload) picker.hidden = true;
+    });
 }
 
 function isDownloadHeartedByViewer(download) {
@@ -4016,6 +4064,7 @@ function showEditDownloadForm(download) {
         const cancelButton = document.getElementById('cancelEdit');
 
         const payload = { name, description, membersOnly };
+        const uploadedFileIds = [];
 
         try {
             if (saveButton) {
@@ -4033,6 +4082,12 @@ function showEditDownloadForm(download) {
                     }
 
                     const file = entry.file;
+                    if (!Boolean(currentUser?.canUploadDownloads)) {
+                        throw new Error('Envio de arquivos está desativado para sua conta.');
+                    }
+                    if (!Boolean(currentUser?.canUploadDownloads)) {
+                        throw new Error('Envio de arquivos está desativado para sua conta.');
+                    }
                     if (Number(file?.size || 0) > MAX_DOWNLOAD_FILE_BYTES) {
                         throw new Error('Arquivo muito grande. Limite de 500MB para uploads de download.');
                     }
@@ -4048,6 +4103,7 @@ function showEditDownloadForm(download) {
                     }
 
                     const uploaded = uploadResponse.file;
+                    if (uploaded.uploadId) uploadedFileIds.push(uploaded.uploadId);
                     links.push({
                         url: String(uploaded.url),
                         format: normalizeDownloadLinkFormat(entry.format || uploaded.format || 'auto')
@@ -4063,13 +4119,16 @@ function showEditDownloadForm(download) {
 
             const response = await AuthAPI.updateDownload(download.id, payload);
             if (response.success) {
+                uploadedFileIds.length = 0;
                 showNotification('Download atualizado com sucesso!', 'success');
                 modal.remove();
                 loadDownloads();
             } else {
+                await cleanupUnattachedR2Uploads(uploadedFileIds);
                 showNotification(response.message || 'Erro ao atualizar download', 'error');
             }
         } catch (error) {
+            await cleanupUnattachedR2Uploads(uploadedFileIds);
             showNotification(error?.message || 'Erro ao atualizar download', 'error');
         } finally {
             if (saveButton) {
@@ -4312,6 +4371,7 @@ async function submitDownload() {
         return;
     }
 
+    const uploadedFileIds = [];
     try {
         const links = [];
         for (const entry of entries) {
@@ -4335,6 +4395,7 @@ async function submitDownload() {
             }
 
             const uploaded = uploadResponse.file;
+            if (uploaded.uploadId) uploadedFileIds.push(uploaded.uploadId);
             links.push({
                 url: String(uploaded.url),
                 format: normalizeDownloadLinkFormat(entry.format || uploaded.format || 'auto')
@@ -4344,6 +4405,7 @@ async function submitDownload() {
         const response = await AuthAPI.createDownload(name, description, { links, isAdult, membersOnly });
 
         if (response.success) {
+            uploadedFileIds.length = 0;
             showNotification('Download postado com sucesso!', 'success');
             if (Array.isArray(response.gainedPostAchievementRanks) && response.gainedPostAchievementRanks.length > 0) {
                 await refreshNavbarNotificationBadgeAfterAchievement();
@@ -4358,10 +4420,12 @@ async function submitDownload() {
             // Recarregar downloads
             await loadDownloads();
         } else {
+            await cleanupUnattachedR2Uploads(uploadedFileIds);
             errorDiv.textContent = response.message || 'Erro ao postar download';
             errorDiv.style.display = 'block';
         }
     } catch (error) {
+        await cleanupUnattachedR2Uploads(uploadedFileIds);
         console.error('Erro ao postar download:', error);
         errorDiv.textContent = error?.message ? String(error.message) : 'Erro ao conectar ao servidor';
         errorDiv.style.display = 'block';
