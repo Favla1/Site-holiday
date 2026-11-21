@@ -1,4 +1,4 @@
-﻿// API Configuration
+// API Configuration
 function normalizeApiBase(rawUrl) {
     const sanitized = String(rawUrl || '').trim().replace(/\/+$/, '');
     if (!sanitized) return '';
@@ -1872,27 +1872,135 @@ class AuthAPI {
 
     // Upload de arquivo compactado (.zip/.rar) para usar como link do download
     static async uploadDownloadFile(file) {
+        let token = '';
+        let pendingUploadId = '';
         try {
-            const token = localStorage.getItem('token');
+            token = localStorage.getItem('token') || '';
             if (!token) {
                 return { success: false, message: 'Faça login para enviar arquivos.' };
             }
 
-            const form = new FormData();
-            form.append('file', file);
+            const hostname = String(window.location.hostname || '').toLowerCase();
+            const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+            const parseApiResponse = async (response, operation) => {
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch {
+                    const detail = text.replace(/\s+/g, ' ').trim().slice(0, 180);
+                    throw new Error(
+                        detail
+                            ? `${operation} falhou (HTTP ${response.status}): ${detail}`
+                            : `${operation} falhou (HTTP ${response.status}).`
+                    );
+                }
 
-            const response = await fetch(`${API_URL}/downloads/upload-file`, {
+                if (!response.ok || result?.success === false) {
+                    throw new Error(result?.message || `${operation} falhou (HTTP ${response.status}).`);
+                }
+                return result;
+            };
+
+            if (isLocal) {
+                const form = new FormData();
+                form.append('file', file);
+                const response = await fetch(`${API_URL}/downloads/upload-file`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${token}` },
+                    body: form
+                });
+                return await parseApiResponse(response, 'Upload do arquivo');
+            }
+
+            const ticketResponse = await fetch(`${API_URL}/downloads/upload-ticket`, {
                 method: 'POST',
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 },
-                body: form
+                body: JSON.stringify({
+                    filename: file.name,
+                    contentType: file.type,
+                    size: file.size
+                })
             });
+            const ticketResult = await parseApiResponse(ticketResponse, 'Preparação do upload');
+            const upload = ticketResult.upload;
+            pendingUploadId = String(upload?.uploadId || '');
+            if (!upload?.uploadId || !upload?.uploadUrl || !upload?.headers) {
+                throw new Error('O servidor não retornou os dados necessários para enviar o arquivo.');
+            }
 
-            return await response.json();
+            const storageResponse = await fetch(upload.uploadUrl, {
+                method: 'PUT',
+                headers: upload.headers,
+                body: file
+            });
+            if (!storageResponse.ok) {
+                const detail = (await storageResponse.text()).replace(/\s+/g, ' ').trim().slice(0, 180);
+                throw new Error(
+                    detail
+                        ? `O armazenamento recusou o arquivo (HTTP ${storageResponse.status}): ${detail}`
+                        : `O armazenamento recusou o arquivo (HTTP ${storageResponse.status}).`
+                );
+            }
+
+            const completeResponse = await fetch(`${API_URL}/downloads/upload-complete`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uploadId: upload.uploadId })
+            });
+            const completeResult = await parseApiResponse(completeResponse, 'Confirmação do upload');
+            pendingUploadId = '';
+            return completeResult;
         } catch (error) {
+            if (pendingUploadId && token) {
+                try {
+                    await fetch(`${API_URL}/downloads/upload/${encodeURIComponent(pendingUploadId)}`, {
+                        method: 'DELETE',
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                } catch (cleanupError) {
+                    console.error('Erro ao limpar upload incompleto do R2:', cleanupError);
+                }
+            }
             console.error('Erro ao enviar arquivo do download:', error);
-            return { success: false, message: 'Erro de conexeo' };
+            return { success: false, message: error?.message || 'Erro de conexão durante o upload.' };
+        }
+    }
+
+    static async abortDownloadFile(uploadId) {
+        const safeUploadId = String(uploadId || '').trim();
+        if (!safeUploadId) return { success: true };
+
+        try {
+            const response = await fetch(`${API_URL}/downloads/upload/${encodeURIComponent(safeUploadId)}`, {
+                method: 'DELETE',
+                headers: this.getHeaders(true)
+            });
+            const responseText = await response.text();
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch {
+                const detail = responseText.replace(/\s+/g, ' ').trim().slice(0, 180);
+                throw new Error(
+                    detail
+                        ? `Não foi possível limpar o arquivo (HTTP ${response.status}): ${detail}`
+                        : `Não foi possível limpar o arquivo (HTTP ${response.status}).`
+                );
+            }
+            if (!response.ok || result?.success === false) {
+                throw new Error(result?.message || `Não foi possível limpar o arquivo (HTTP ${response.status}).`);
+            }
+            return result;
+        } catch (error) {
+            console.error('Erro ao limpar arquivo temporário de download:', error);
+            return { success: false, message: error?.message || 'Erro de conexão ao limpar o arquivo.' };
         }
     }
 
